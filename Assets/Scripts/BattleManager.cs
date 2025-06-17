@@ -8,6 +8,11 @@ public class BattleManager : MonoBehaviour
     public Transform playerPosition;
     public Transform enemyPosition;
 
+    [HideInInspector] public GameObject currentPlayer;
+    [HideInInspector] public GameObject currentEnemy;
+    [HideInInspector] public Fighter currentPlayerFighter;
+    [HideInInspector] public Fighter currentEnemyFighter;
+
     public BattleState state;
 
     private void Start()
@@ -18,7 +23,9 @@ public class BattleManager : MonoBehaviour
 
     private void SetupBattle()
     {
-        Instantiate(playerPrefab, playerPosition);
-        Instantiate(enemyPrefab, enemyPosition);
+        currentPlayer = Instantiate(playerPrefab, playerPosition);
+        currentPlayerFighter = currentPlayerFighter.GetComponent<Fighter>();
+        currentEnemy = Instantiate(enemyPrefab, enemyPosition);
+        currentEnemyFighter = currentEnemyFighter.GetComponent<Fighter>();
     }
 }

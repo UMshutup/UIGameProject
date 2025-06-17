@@ -1561,7 +1561,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 949798538}
-  - component: {fileID: 949798537}
+  - component: {fileID: 949798539}
   m_Layer: 0
   m_Name: Battle Manager
   m_TagString: Untagged
@@ -1569,23 +1569,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &949798537
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 949798536}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d25c0d2e19ea2c4cbdde98d85e48cc9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerPrefab: {fileID: 1328141007261945905, guid: cb20ba766348ef54db9b0448e4b84600, type: 3}
-  enemyPrefab: {fileID: 431162800992234521, guid: e8e0f87c0e0488947be4be89b0b675d9, type: 3}
-  playerPosition: {fileID: 3294369}
-  enemyPosition: {fileID: 1341879726}
-  state: 0
 --- !u!4 &949798538
 Transform:
   m_ObjectHideFlags: 0
@@ -1601,6 +1584,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &949798539
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 949798536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d25c0d2e19ea2c4cbdde98d85e48cc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerPrefab: {fileID: 3686999765468893870, guid: 827462c2f9ba24740a25ef6cbf6fcf56, type: 3}
+  enemyPrefab: {fileID: 5842227636548727938, guid: 65bbc0e06f3cb40448ce85a00d0b0285, type: 3}
+  playerPosition: {fileID: 3294369}
+  enemyPosition: {fileID: 1341879726}
+  state: 0
 --- !u!1 &993122316
 GameObject:
   m_ObjectHideFlags: 0
