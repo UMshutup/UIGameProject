@@ -1,16 +1,30 @@
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BattleUIManager : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [SerializeField] private BattleManager battleManager;
+
+    [Header("Player UI")]
+    [SerializeField] private TextMeshProUGUI playerNameText;
+    [SerializeField] private Image playerHealthBar;
+
+    [Header("Enemy UI")]
+    [SerializeField] private TextMeshProUGUI enemyNameText;
+    [SerializeField] private Image enemyHealthBar;
+
+    private void Update()
     {
-        
+        AssignUIInformation();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void AssignUIInformation()
     {
-        
+        playerNameText.text = battleManager.currentPlayerFighter.fighterName;
+        playerHealthBar.fillAmount = battleManager.currentPlayerFighter.currentHP / battleManager.currentPlayerFighter.maxHP;
+
+        enemyNameText.text = battleManager.currentEnemyFighter.fighterName;
+        enemyHealthBar.fillAmount = battleManager.currentEnemyFighter.currentHP / battleManager.currentEnemyFighter.maxHP;
     }
 }

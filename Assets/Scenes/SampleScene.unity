@@ -954,7 +954,7 @@ GameObject:
   - component: {fileID: 490539558}
   - component: {fileID: 490539557}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: PlayerName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1353,7 +1353,7 @@ GameObject:
   - component: {fileID: 867102492}
   - component: {fileID: 867102491}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: EnemyName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1489,7 +1489,7 @@ GameObject:
   - component: {fileID: 939023786}
   - component: {fileID: 939023785}
   m_Layer: 5
-  m_Name: Image
+  m_Name: PlayerHealthBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1562,6 +1562,7 @@ GameObject:
   m_Component:
   - component: {fileID: 949798538}
   - component: {fileID: 949798539}
+  - component: {fileID: 949798540}
   m_Layer: 0
   m_Name: Battle Manager
   m_TagString: Untagged
@@ -1600,7 +1601,28 @@ MonoBehaviour:
   enemyPrefab: {fileID: 5842227636548727938, guid: 65bbc0e06f3cb40448ce85a00d0b0285, type: 3}
   playerPosition: {fileID: 3294369}
   enemyPosition: {fileID: 1341879726}
+  currentPlayer: {fileID: 0}
+  currentEnemy: {fileID: 0}
+  currentPlayerFighter: {fileID: 0}
+  currentEnemyFighter: {fileID: 0}
   state: 0
+--- !u!114 &949798540
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 949798536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50f84ca4a3301f44c9bdbff2a207e207, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  battleManager: {fileID: 949798539}
+  playerNameText: {fileID: 490539557}
+  playerHealthBar: {fileID: 939023785}
+  enemyNameText: {fileID: 867102491}
+  enemyHealthBar: {fileID: 2024859964}
 --- !u!1 &993122316
 GameObject:
   m_ObjectHideFlags: 0
@@ -2360,7 +2382,7 @@ GameObject:
   - component: {fileID: 2024859965}
   - component: {fileID: 2024859964}
   m_Layer: 5
-  m_Name: Image
+  m_Name: EnemyHealthBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
