@@ -15,13 +15,17 @@ public class BattleManager : MonoBehaviour
 
     public BattleState state;
 
-    private bool playerGoesFirst;
+    public bool playerGoesFirst;
+
+    public bool hasMoveBeenSelected;
 
     private void Start()
     {
         state = BattleState.START;
         SetupBattle();
         state = BattleState.ACTIONTURN;
+        currentPlayerFighter.target = currentEnemyFighter;
+        currentEnemyFighter.target = currentPlayerFighter;
     }
 
     private void SetupBattle()
@@ -34,14 +38,25 @@ public class BattleManager : MonoBehaviour
 
     public void MoveSelected(int _moveNumber)
     {
-        if (state != BattleState.ACTIONTURN)
-        {
-            return;
-        }
-        currentEnemyFighter.ChooseMoveRandom();
         currentPlayerFighter.ChooseMove(_moveNumber);
+        currentEnemyFighter.ChooseMoveRandom();
+
+        hasMoveBeenSelected = true;
         DecideWhosFirst();
-        TurnOrder();
+    }
+
+    private void Update()
+    {
+        if (hasMoveBeenSelected) {
+            TurnOrder();
+        }
+        else
+        {
+            currentPlayerFighter.hasFinishedAnimation =false;
+            currentPlayerFighter.hasAppendedAnimation = false;
+            currentEnemyFighter.hasFinishedAnimation = false;
+            currentEnemyFighter.hasAppendedAnimation = false;
+        }
     }
 
     private void TurnOrder()
@@ -65,25 +80,20 @@ public class BattleManager : MonoBehaviour
         if (currentPlayerFighter.hasFinishedAnimation && currentEnemyFighter.hasFinishedAnimation)
         {
             state = BattleState.ACTIONTURN;
+            hasMoveBeenSelected = false;
         }
     }
 
     private void PlayerTurn()
     {
-        if (currentPlayerFighter.dealDamage)
-        {
-            currentEnemyFighter.currentHP -= currentPlayerFighter.chosenMove.CalculateDamage(currentPlayerFighter, currentEnemyFighter);
-        }
-        currentPlayerFighter.target = currentEnemyFighter;
+        currentPlayerFighter.UseMove();
+        state = BattleState.PLAYERTURN;
     }
 
     private void EnemyTurn()
     {
-        if (currentEnemyFighter.dealDamage)
-        {
-            currentPlayerFighter.currentHP -= currentEnemyFighter.chosenMove.CalculateDamage(currentEnemyFighter, currentPlayerFighter);
-        }
-        currentEnemyFighter.target = currentPlayerFighter;
+        currentEnemyFighter.UseMove();
+        state = BattleState.ENEMYTURN;
     }
 
     private void DecideWhosFirst()

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03d7adde6756f1b46822aab0abc576ac, type: 3}
   m_Name: TestMelee
   m_EditorClassIdentifier: 
-  moveName: 
-  moveDescription: 
-  moveDamage: 0
+  moveName: Test Melee
+  moveDescription: Deals melee damage
+  moveDamage: 2
   moveCategory: 0

@@ -23,23 +23,59 @@ public class Fighter : MonoBehaviour
 
     [Header("Animator")]
     private Animator animator;
-    [HideInInspector] public bool dealDamage;
 
+    //Animation lenghts
+    [HideInInspector] public float idleLenght;
+    [HideInInspector] public float altIdleLenght;
+    [HideInInspector] public float windupLenght;
+    [HideInInspector] public float attackLenght;
+    [HideInInspector] public float hurtLenght;
+    [HideInInspector] public float sleepIdleLenght;
 
+    //Misc variables
     [HideInInspector] public Fighter target;
 
     private Transform originalTransform;
-    [HideInInspector] public bool hasChosenMove = false;
-    [HideInInspector] public bool hasFinishedAnimation;
+    [HideInInspector] public bool hasFinishedAnimation = false;
 
-    private bool hasAppendedAnimation;
+    [HideInInspector] public bool hasAppendedAnimation;
 
 
     private void Start()
     {
         animator = GetComponent<Animator>();
+        UpdateAnimClipTimes();
         currentHP = maxHP;
         originalTransform = transform;
+    }
+
+    public void UpdateAnimClipTimes()
+    {
+        AnimationClip[] clips = animator.runtimeAnimatorController.animationClips;
+        foreach (AnimationClip clip in clips)
+        {
+            switch (clip.name)
+            {
+                case "idle":
+                    idleLenght = clip.length;
+                    break;
+                case "alt_idle":
+                    altIdleLenght = clip.length;
+                    break;
+                case "windup":
+                    windupLenght = clip.length;
+                    break;
+                case "attack":
+                    attackLenght = clip.length;
+                    break;
+                case "hurt":
+                    hurtLenght = clip.length;
+                    break;
+                case "sleep_idle":
+                    sleepIdleLenght = clip.length;
+                    break;
+            }
+        }
     }
 
     public void ChooseMove(int _moveNumber)
@@ -48,7 +84,6 @@ public class Fighter : MonoBehaviour
             if (i == _moveNumber)
             {
                 chosenMove = moves[i];
-                hasChosenMove = true;
             }
         }
     }
@@ -61,18 +96,22 @@ public class Fighter : MonoBehaviour
             if (i == moveNumber)
             {
                 chosenMove = moves[i];
-                hasChosenMove = true;
             }
         }
     }
 
     private void Update()
     {
-        if (hasChosenMove)
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("windup"))
         {
-            UseMove();
-            hasAppendedAnimation = false;
+            animator.SetTrigger("attack");
         }
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("attack"))
+        {
+            animator.SetTrigger("idle");
+        }
+
+
     }
 
     public void UseMove()
@@ -82,59 +121,37 @@ public class Fighter : MonoBehaviour
         if (chosenMove.GetMoveCategory() == MoveCategory.MELEE)
         {
             if (!hasAppendedAnimation) {
-                hasFinishedAnimation = false;
-                sequence.Append(transform.DOLocalMove(target.transform.localPosition, 0.5f)).
+                sequence.Append(transform.DOMove(target.transform.position, 0.5f)).
                     AppendCallback(() => animator.SetTrigger("windup")).
-                    AppendCallback(() => MoveAnimation());
+                    AppendInterval(windupLenght + attackLenght).
+                    Append(transform.DOMove(originalTransform.position, 0.5f)).
+                    AppendCallback(() => hasFinishedAnimation = true);
                 hasAppendedAnimation = true;
-            }
-            if (animator.GetCurrentAnimatorStateInfo(0).IsName("attack"))
-            {
-                hasAppendedAnimation = false;
-                if (!hasAppendedAnimation) {
-                    sequence.Append(transform.DOLocalMove(originalTransform.localPosition, 0.5f)).
-                        AppendCallback(() => hasFinishedAnimation = true);
-                    hasAppendedAnimation = true;
-                }
             }
         }else if (chosenMove.GetMoveCategory() == MoveCategory.RANGED)
         {
             if (!hasAppendedAnimation)
             {
-                hasFinishedAnimation = false;
                 sequence.Append(transform.DOLocalMove(originalTransform.localPosition - new Vector3(1, 0, 0), 0.5f)).
                     AppendCallback(() => animator.SetTrigger("windup")).
-                    AppendCallback(() => MoveAnimation());
+                    AppendInterval(windupLenght + attackLenght).
+                    Append(transform.DOLocalMove(originalTransform.localPosition, 0.5f)).
+                    AppendCallback(() => hasFinishedAnimation = true);
                 hasAppendedAnimation = true;
-            }
-            if (animator.GetCurrentAnimatorStateInfo(0).IsName("attack"))
-            {
-                hasAppendedAnimation = false;
-                if (!hasAppendedAnimation)
-                {
-                    sequence.Append(transform.DOLocalMove(originalTransform.localPosition, 0.5f)).
-                        AppendCallback(() => hasFinishedAnimation = true);
-                    hasAppendedAnimation = true;
-                }
             }
         }
         else
         {
             Debug.Log("Error: no animation for move category");
         }
+        
+        
+
     }
 
     public void MoveAnimation()
     {
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("windup"))
-        {
-            dealDamage = true;
-            dealDamage = false;
-            animator.SetTrigger("attack");
-        }
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("attack"))
-        {
-            animator.SetTrigger("idle");
-        }
+        
+        
     }
 }

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03d7adde6756f1b46822aab0abc576ac, type: 3}
   m_Name: TestRanged
   m_EditorClassIdentifier: 
-  moveName: 
-  moveDescription: 
-  moveDamage: 0
-  moveCategory: 0
+  moveName: Test Ranged
+  moveDescription: Deals ranged damage
+  moveDamage: 2
+  moveCategory: 1
