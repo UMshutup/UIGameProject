@@ -52,10 +52,8 @@ public class BattleManager : MonoBehaviour
         }
         else
         {
-            currentPlayerFighter.hasFinishedAnimation =false;
-            currentPlayerFighter.hasAppendedAnimation = false;
-            currentEnemyFighter.hasFinishedAnimation = false;
-            currentEnemyFighter.hasAppendedAnimation = false;
+            currentPlayerFighter.ResetValues();
+            currentEnemyFighter.ResetValues();
         }
     }
 

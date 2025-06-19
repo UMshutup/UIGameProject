@@ -15,6 +15,7 @@ public class Fighter : MonoBehaviour
     public float speed;
 
     [HideInInspector] public float currentHP;
+    [HideInInspector] public float previousHP;
 
     [Header("Moves")]
     public Move[] moves;
@@ -35,6 +36,8 @@ public class Fighter : MonoBehaviour
     //Misc variables
     [HideInInspector] public Fighter target;
 
+    [HideInInspector] public AimToTarget aimtToTarget;
+
     private Transform originalTransform;
     [HideInInspector] public bool hasFinishedAnimation = false;
 
@@ -45,8 +48,13 @@ public class Fighter : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         UpdateAnimClipTimes();
+
         currentHP = maxHP;
+        previousHP = currentHP;
+
         originalTransform = transform;
+
+        InvokeRepeating("PlayAltIdleAnimation", 1, 1);
     }
 
     public void UpdateAnimClipTimes()
@@ -102,6 +110,13 @@ public class Fighter : MonoBehaviour
 
     private void Update()
     {
+        
+
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("alt_idle"))
+        {
+            animator.SetTrigger("idle");
+        }
+
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("windup"))
         {
             animator.SetTrigger("attack");
@@ -111,19 +126,34 @@ public class Fighter : MonoBehaviour
             animator.SetTrigger("idle");
         }
 
+        if (HasTakenDamage())
+        {
+            animator.SetTrigger("hurt");
+            previousHP = currentHP;
+        }
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("hurt"))
+        {
+            animator.SetTrigger("idle");
+        }
 
+
+        aimtToTarget = GetComponentInChildren<AimToTarget>();
     }
 
     public void UseMove()
     {
         var sequence = DOTween.Sequence();
-        
+
         if (chosenMove.GetMoveCategory() == MoveCategory.MELEE)
         {
             if (!hasAppendedAnimation) {
-                sequence.Append(transform.DOMove(target.transform.position, 0.5f)).
+                sequence.Append(transform.DOMoveX(target.transform.localPosition.x - 0.10f, 0.5f)).
+                    Join(transform.DOMoveZ(target.transform.position.z, 0.5f)).
                     AppendCallback(() => animator.SetTrigger("windup")).
-                    AppendInterval(windupLenght + attackLenght).
+                    AppendInterval(windupLenght / 1.5f).
+                    AppendCallback(() => chosenMove.ShowMoveVisualEffect(target.transform)).
+                    AppendCallback(() => DealDamage()).
+                    AppendInterval(attackLenght).
                     Append(transform.DOMove(originalTransform.position, 0.5f)).
                     AppendCallback(() => hasFinishedAnimation = true);
                 hasAppendedAnimation = true;
@@ -132,9 +162,13 @@ public class Fighter : MonoBehaviour
         {
             if (!hasAppendedAnimation)
             {
-                sequence.Append(transform.DOLocalMove(originalTransform.localPosition - new Vector3(1, 0, 0), 0.5f)).
+                sequence.Append(transform.DOLocalMove(originalTransform.localPosition - new Vector3(0.25f, 0, 0), 0.5f)).
                     AppendCallback(() => animator.SetTrigger("windup")).
-                    AppendInterval(windupLenght + attackLenght).
+                    AppendInterval(windupLenght).
+                    AppendCallback(() => chosenMove.ShowMoveVisualEffect(aimtToTarget.transform)).
+                    AppendInterval(Vector3.Distance(aimtToTarget.transform.position, target.transform.position) / chosenMove.GetMoveVisualEffectPrefab().GetComponent<RangedDamageEffect>().projectileSpeed + 0.05f).
+                    AppendCallback(() => DealDamage()).
+                    AppendInterval(attackLenght).
                     Append(transform.DOLocalMove(originalTransform.localPosition, 0.5f)).
                     AppendCallback(() => hasFinishedAnimation = true);
                 hasAppendedAnimation = true;
@@ -149,9 +183,33 @@ public class Fighter : MonoBehaviour
 
     }
 
-    public void MoveAnimation()
+    private void DealDamage()
     {
+        target.currentHP -= chosenMove.CalculateDamage(this, target);
+    }
+
+    private bool HasTakenDamage()
+    {
+        bool hasTakenDamage;
+
+        hasTakenDamage = previousHP > currentHP;
+
+        return hasTakenDamage;
+    }
+
+    public void PlayAltIdleAnimation()
+    {
+        if (Random.Range(0,8) == 0)
+        {
+            animator.SetTrigger("alt_idle");
+        }
         
-        
+    }
+
+    public void ResetValues()
+    {
+        hasFinishedAnimation = false;
+        hasAppendedAnimation = false;
+
     }
 }
