@@ -1,3 +1,4 @@
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,9 +15,24 @@ public class BattleUIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI enemyNameText;
     [SerializeField] private Image enemyHealthBar;
 
+    [Header("Player UI")]
+    [SerializeField] private GameObject moveList;
+
+    private bool isMoveListOnScreen;
+
+    private bool hasHiddenMoveList = false;
+
     private void Update()
     {
         AssignUIInformation();
+
+        if (battleManager.hasMoveBeenSelected && !hasHiddenMoveList)
+        {
+            isMoveListOnScreen = true;
+            ShowHideMoveList();
+            hasHiddenMoveList=true;
+        }
+
     }
 
     private void AssignUIInformation()
@@ -26,5 +42,21 @@ public class BattleUIManager : MonoBehaviour
 
         enemyNameText.text = battleManager.currentEnemyFighter.fighterName;
         enemyHealthBar.fillAmount = battleManager.currentEnemyFighter.currentHP / battleManager.currentEnemyFighter.maxHP;
+    }
+
+    public void ShowHideMoveList()
+    {
+
+        if (!isMoveListOnScreen)
+        {
+            moveList.transform.DOLocalMoveY(227, 0.5f);
+            isMoveListOnScreen = true;
+            hasHiddenMoveList = false ;
+        }
+        else
+        {
+            moveList.transform.DOLocalMoveY(-498, 0.5f);
+            isMoveListOnScreen = false;
+        }
     }
 }

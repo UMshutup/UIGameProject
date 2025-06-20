@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1582390634563528154
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6858855990044780537}
+  m_Layer: 0
+  m_Name: Hit
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6858855990044780537
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1582390634563528154}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.368, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6700856635255119079}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4859197667234021163
 GameObject:
   m_ObjectHideFlags: 0
@@ -26,7 +57,7 @@ Transform:
   m_GameObject: {fileID: 4859197667234021163}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.285, z: 0}
+  m_LocalPosition: {x: 0.369, y: 0.314, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -71,7 +102,7 @@ PrefabInstance:
     - target: {fileID: 3626916397498700004, guid: b5bd80514cfafd946bd0ce694115e85c, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 6283490664230313133, guid: 89e7397d1dd7e9448af0b009b9b385a2, type: 3}
+      objectReference: {fileID: 6449175069077927916, guid: 28915afe37437424a84c032b612ec6b5, type: 3}
     - target: {fileID: 3626916397498700004, guid: b5bd80514cfafd946bd0ce694115e85c, type: 3}
       propertyPath: m_CastShadows
       value: 3
@@ -220,7 +251,7 @@ PrefabInstance:
     - target: {fileID: 3626916397498700004, guid: b5bd80514cfafd946bd0ce694115e85c, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 4465817459516562731, guid: 89e7397d1dd7e9448af0b009b9b385a2, type: 3}
+      objectReference: {fileID: -1312813773837689195, guid: 28915afe37437424a84c032b612ec6b5, type: 3}
     - target: {fileID: 7878350319992209165, guid: b5bd80514cfafd946bd0ce694115e85c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -270,6 +301,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7878350319992209165, guid: b5bd80514cfafd946bd0ce694115e85c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6124969765475699224}
+    - targetCorrespondingSourceObject: {fileID: 7878350319992209165, guid: b5bd80514cfafd946bd0ce694115e85c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6858855990044780537}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: -2253911629886400664, guid: b5bd80514cfafd946bd0ce694115e85c, type: 3}
       insertIndex: -1
@@ -345,7 +379,13 @@ MonoBehaviour:
   moves:
   - {fileID: 11400000, guid: bd7a2fa4082e2ae41bc2123425847457, type: 2}
   - {fileID: 11400000, guid: b5498487bd839714a9a1eebac4bb7fc1, type: 2}
+  - {fileID: 11400000, guid: 22a74328dafb5574794ad57c6a851452, type: 2}
+  - {fileID: 11400000, guid: b1aaee7d243e6b143a184057da9821bd, type: 2}
   chosenMove: {fileID: 0}
+  chosenMoveNumber: 0
+  hasMoveLanded: 0
+  AimPosition: {fileID: 4859197667234021163}
+  HitPosition: {fileID: 1582390634563528154}
   idleLenght: 0
   altIdleLenght: 0
   windupLenght: 0
@@ -353,7 +393,6 @@ MonoBehaviour:
   hurtLenght: 0
   sleepIdleLenght: 0
   target: {fileID: 0}
-  aimtToTarget: {fileID: 0}
   hasFinishedAnimation: 0
   hasAppendedAnimation: 0
 --- !u!4 &6700856635255119079 stripped

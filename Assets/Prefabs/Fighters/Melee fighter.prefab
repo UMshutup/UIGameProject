@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3000719787711371628
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1793924151424003877}
+  m_Layer: 0
+  m_Name: Hit
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1793924151424003877
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3000719787711371628}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.269, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4523619874894740171}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4963505559432041450
 GameObject:
   m_ObjectHideFlags: 0
@@ -270,6 +301,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7878350319992209165, guid: b5bd80514cfafd946bd0ce694115e85c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1127339852521424657}
+    - targetCorrespondingSourceObject: {fileID: 7878350319992209165, guid: b5bd80514cfafd946bd0ce694115e85c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1793924151424003877}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: -2253911629886400664, guid: b5bd80514cfafd946bd0ce694115e85c, type: 3}
       insertIndex: -1
@@ -340,7 +374,13 @@ MonoBehaviour:
   moves:
   - {fileID: 11400000, guid: b5498487bd839714a9a1eebac4bb7fc1, type: 2}
   - {fileID: 11400000, guid: bd7a2fa4082e2ae41bc2123425847457, type: 2}
+  - {fileID: 11400000, guid: 22a74328dafb5574794ad57c6a851452, type: 2}
+  - {fileID: 11400000, guid: b1aaee7d243e6b143a184057da9821bd, type: 2}
   chosenMove: {fileID: 0}
+  chosenMoveNumber: 0
+  hasMoveLanded: 0
+  AimPosition: {fileID: 4963505559432041450}
+  HitPosition: {fileID: 3000719787711371628}
   idleLenght: 0
   altIdleLenght: 0
   windupLenght: 0

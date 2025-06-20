@@ -1,5 +1,6 @@
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Fighter : MonoBehaviour
 {
@@ -21,6 +22,13 @@ public class Fighter : MonoBehaviour
     public Move[] moves;
 
     [HideInInspector] public Move chosenMove;
+    [HideInInspector] public int chosenMoveNumber;
+
+    [HideInInspector] public bool hasMoveLanded;
+
+    [Header("Positions")]
+    public GameObject AimPosition;
+    public GameObject HitPosition;
 
     [Header("Animator")]
     private Animator animator;
@@ -35,8 +43,6 @@ public class Fighter : MonoBehaviour
 
     //Misc variables
     [HideInInspector] public Fighter target;
-
-    [HideInInspector] public AimToTarget aimtToTarget;
 
     private Transform originalTransform;
     [HideInInspector] public bool hasFinishedAnimation = false;
@@ -92,6 +98,7 @@ public class Fighter : MonoBehaviour
             if (i == _moveNumber)
             {
                 chosenMove = moves[i];
+                chosenMoveNumber = i;
             }
         }
     }
@@ -104,6 +111,7 @@ public class Fighter : MonoBehaviour
             if (i == moveNumber)
             {
                 chosenMove = moves[i];
+                chosenMoveNumber = i;
             }
         }
     }
@@ -135,9 +143,6 @@ public class Fighter : MonoBehaviour
         {
             animator.SetTrigger("idle");
         }
-
-
-        aimtToTarget = GetComponentInChildren<AimToTarget>();
     }
 
     public void UseMove()
@@ -151,7 +156,8 @@ public class Fighter : MonoBehaviour
                     Join(transform.DOMoveZ(target.transform.position.z, 0.5f)).
                     AppendCallback(() => animator.SetTrigger("windup")).
                     AppendInterval(windupLenght / 1.5f).
-                    AppendCallback(() => chosenMove.ShowMoveVisualEffect(target.transform)).
+                    AppendCallback(() => CheckIfMoveLands()).
+                    AppendCallback(() => chosenMove.ShowMoveVisualEffect(target.HitPosition.transform, hasMoveLanded)).
                     AppendCallback(() => DealDamage()).
                     AppendInterval(attackLenght).
                     Append(transform.DOMove(originalTransform.position, 0.5f)).
@@ -165,8 +171,9 @@ public class Fighter : MonoBehaviour
                 sequence.Append(transform.DOLocalMove(originalTransform.localPosition - new Vector3(0.25f, 0, 0), 0.5f)).
                     AppendCallback(() => animator.SetTrigger("windup")).
                     AppendInterval(windupLenght).
-                    AppendCallback(() => chosenMove.ShowMoveVisualEffect(aimtToTarget.transform)).
-                    AppendInterval(Vector3.Distance(aimtToTarget.transform.position, target.transform.position) / chosenMove.GetMoveVisualEffectPrefab().GetComponent<RangedDamageEffect>().projectileSpeed + 0.05f).
+                    AppendCallback(() => CheckIfMoveLands()).
+                    AppendCallback(() => chosenMove.ShowMoveVisualEffect(AimPosition.transform, hasMoveLanded)).
+                    AppendInterval(Vector3.Distance(AimPosition.transform.position, target.HitPosition.transform.position) / chosenMove.GetMoveVisualEffectPrefab().GetComponent<RangedDamageEffect>().projectileSpeed + 0.05f).
                     AppendCallback(() => DealDamage()).
                     AppendInterval(attackLenght).
                     Append(transform.DOLocalMove(originalTransform.localPosition, 0.5f)).
@@ -183,10 +190,30 @@ public class Fighter : MonoBehaviour
 
     }
 
+    private void CheckIfMoveLands()
+    {
+        if (Random.Range(0,100f) < chosenMove.GetMoveAccuracy())
+        {
+            hasMoveLanded = true;
+        }
+        else
+        {
+            hasMoveLanded = false;
+        }
+        
+    }
+
     private void DealDamage()
     {
-        target.currentHP -= chosenMove.CalculateDamage(this, target);
+        
+        if (hasMoveLanded)
+        {
+            target.currentHP -= chosenMove.CalculateDamage(this, target);
+        }
     }
+
+    
+
 
     private bool HasTakenDamage()
     {
