@@ -25,6 +25,7 @@ public class Fighter : MonoBehaviour
     [HideInInspector] public int chosenMoveNumber;
 
     [HideInInspector] public bool hasMoveLanded;
+    [HideInInspector] public bool hasChosenMove;
 
     [Header("Positions")]
     public GameObject AimPosition;
@@ -43,6 +44,7 @@ public class Fighter : MonoBehaviour
 
     //Misc variables
     [HideInInspector] public Fighter target;
+    [HideInInspector] public bool hasChosenTarget;
 
     private Transform originalTransform;
     [HideInInspector] public bool hasFinishedAnimation = false;
@@ -101,6 +103,12 @@ public class Fighter : MonoBehaviour
                 chosenMoveNumber = i;
             }
         }
+    }
+
+    public void ChooseTarget(Fighter _target)
+    {
+        target = _target;
+        hasChosenTarget = true;
     }
 
     public void ChooseMoveRandom()
