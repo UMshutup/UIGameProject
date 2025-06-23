@@ -8,9 +8,8 @@ public class SelectableFighter : MonoBehaviour
 
     [HideInInspector] public bool canSelect = false;
     [HideInInspector] public bool hasSelectedTarget;
-    [HideInInspector] public bool hasAppended = false;
-    [HideInInspector] public bool isOnSprite = false;
-    [HideInInspector] public bool isEnemy;
+    private bool hasAppended = false;
+    private bool isOnSprite = false;
 
     private void OnMouseEnter()
     {

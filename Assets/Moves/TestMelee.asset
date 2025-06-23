@@ -17,6 +17,5 @@ MonoBehaviour:
   moveDamage: 2
   moveAccuracy: 100
   moveCategory: 0
-  hitsAWholeSquad: 1
   moveVisualEffectPrefab: {fileID: 3062664297577719860, guid: ceaa6b42bd5d51b4c8aaae35a5445d5b, type: 3}
   moveMissEffectPrefab: {fileID: 3062664297577719860, guid: 347ca88f1f177c44ab79e2aaa04be71d, type: 3}
