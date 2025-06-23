@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.UIElements;
 
 public class BattleManager : MonoBehaviour
 {
@@ -17,6 +19,12 @@ public class BattleManager : MonoBehaviour
 
     private List<Fighter> fighters;
 
+    public GameObject playerTeam;
+    public GameObject enemyTeam;
+
+
+    private List<SelectableFighter> selectablePlayerFighters;
+    private List<SelectableFighter> selectableEnemyFighters;
     private List<SelectableFighter> selectableFighters;
 
     public BattleState state;
@@ -26,6 +34,8 @@ public class BattleManager : MonoBehaviour
     public bool hasRandomized;
 
     public bool isPlayer1Choosing;
+
+    public bool isSelectableFighterAEnemy;
 
     public bool hasEveryoneChosenAMove;
 
@@ -48,7 +58,15 @@ public class BattleManager : MonoBehaviour
 
         fighters = new List<Fighter>(FindObjectsByType<Fighter>(FindObjectsSortMode.None));
 
-        selectableFighters = new List<SelectableFighter>(FindObjectsByType<SelectableFighter>(FindObjectsSortMode.None));
+        selectablePlayerFighters = new List<SelectableFighter>(playerTeam.GetComponentsInChildren<SelectableFighter>());
+        selectableEnemyFighters = new List<SelectableFighter>(enemyTeam.GetComponentsInChildren<SelectableFighter>());
+
+        foreach (SelectableFighter selectableEnemy in selectableEnemyFighters)
+        {
+            selectableEnemy.isEnemy = true;
+        }
+
+        selectableFighters = new List<SelectableFighter>(FindObjectsByType<SelectableFighter>(FindObjectsSortMode.None).ToList());
 
     }
 
@@ -69,12 +87,12 @@ public class BattleManager : MonoBehaviour
 
         foreach (Fighter fighter in currentPlayerFighters)
         {
-            fighter.target = currentEnemyFighters[0];
+            fighter.targets = new List<Fighter> { currentEnemyFighters[0] };
         }
 
         foreach (Fighter fighter in currentEnemyFighters)
         {
-            fighter.target = currentPlayerFighters[0];
+            fighter.targets = new List<Fighter> { currentPlayerFighters[0] };
         }
     }
 
@@ -121,6 +139,7 @@ public class BattleManager : MonoBehaviour
             }
         }
 
+
         TargetSelection();
 
         if (hasEveryoneChosenAMove && hasEveryoneChosenATarget)
@@ -150,6 +169,40 @@ public class BattleManager : MonoBehaviour
                 (currentPlayerFighters[1].hasChosenMove && !isPlayer1Choosing && !currentPlayerFighters[1].hasChosenTarget))
             {
                 selectable.canSelect = true;
+                if (currentPlayerFighters[0].chosenMove.GetHitsAWholeSquad() || currentPlayerFighters[1].chosenMove.GetHitsAWholeSquad())
+                {
+                    if (selectable.isEnemy)
+                    {
+                        isSelectableFighterAEnemy = true;
+                    }
+                    else
+                    {
+                        isSelectableFighterAEnemy = false;
+                    }
+
+                    if (isSelectableFighterAEnemy)
+                    {
+                        if (selectable.isEnemy)
+                        {
+                            selectable.isOnSprite = true;
+                        }
+                        else
+                        {
+                            selectable.isOnSprite = false;
+                        }
+                    }
+                    else
+                    {
+                        if (!selectable.isEnemy)
+                        {
+                            selectable.isOnSprite = true;
+                        }
+                        else
+                        {
+                            selectable.isOnSprite = false;
+                        }
+                    }
+                }
             }
             else 
             {
@@ -157,13 +210,15 @@ public class BattleManager : MonoBehaviour
                 selectable.hasSelectedTarget = false;
             }
 
+            
+
             if (selectable.hasSelectedTarget && isPlayer1Choosing)
             {
-                currentPlayerFighters[0].ChooseTarget(selectable.gameObject.GetComponent<Fighter>());
+                currentPlayerFighters[0].ChooseTarget(new List<Fighter> { selectable.gameObject.GetComponent<Fighter>() });
 
                 foreach (Fighter fighter in currentEnemyFighters)
                 {
-                    fighter.ChooseTarget(currentPlayerFighters[Random.Range(0, currentPlayerFighters.Count - 1)]);
+                    fighter.ChooseTarget(new List<Fighter> { currentPlayerFighters[Random.Range(0, currentPlayerFighters.Count - 1)] });
                     fighter.hasChosenTarget = true;
                 }
 
@@ -171,13 +226,14 @@ public class BattleManager : MonoBehaviour
 
                 selectable.canSelect = false;
             }
-            else if(selectable.hasSelectedTarget && !isPlayer1Choosing)
+
+            if(selectable.hasSelectedTarget && !isPlayer1Choosing)
             {
-                currentPlayerFighters[1].ChooseTarget(selectable.gameObject.GetComponent<Fighter>());
+                currentPlayerFighters[1].ChooseTarget(new List<Fighter> { selectable.gameObject.GetComponent<Fighter>() });
 
                 foreach (Fighter fighter in currentEnemyFighters)
                 {
-                    fighter.ChooseTarget(currentPlayerFighters[Random.Range(0, currentPlayerFighters.Count - 1)]);
+                    fighter.ChooseTarget(new List<Fighter> { currentPlayerFighters[Random.Range(0, currentPlayerFighters.Count - 1)] });
                     fighter.hasChosenTarget = true;
                 }
 

@@ -1,6 +1,9 @@
 using DG.Tweening;
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static UnityEngine.GraphicsBuffer;
 
 public class Fighter : MonoBehaviour
 {
@@ -43,7 +46,7 @@ public class Fighter : MonoBehaviour
     [HideInInspector] public float sleepIdleLenght;
 
     //Misc variables
-    [HideInInspector] public Fighter target;
+    [HideInInspector] public List<Fighter> targets;
     [HideInInspector] public bool hasChosenTarget;
 
     private Transform originalTransform;
@@ -63,6 +66,8 @@ public class Fighter : MonoBehaviour
         originalTransform = transform;
 
         InvokeRepeating("PlayAltIdleAnimation", 1, 1);
+
+        chosenMove = moves[0];
     }
 
     public void UpdateAnimClipTimes()
@@ -105,9 +110,9 @@ public class Fighter : MonoBehaviour
         }
     }
 
-    public void ChooseTarget(Fighter _target)
+    public void ChooseTarget(List<Fighter> _targets)
     {
-        target = _target;
+        targets = _targets;
         hasChosenTarget = true;
     }
 
@@ -160,12 +165,12 @@ public class Fighter : MonoBehaviour
         if (chosenMove.GetMoveCategory() == MoveCategory.MELEE)
         {
             if (!hasAppendedAnimation) {
-                sequence.Append(transform.DOMoveX(target.transform.localPosition.x - 0.10f, 0.5f)).
-                    Join(transform.DOMoveZ(target.transform.position.z, 0.5f)).
+                sequence.Append(transform.DOMoveX(GetTargetLocalPosition().x - 0.10f, 0.5f)).
+                    Join(transform.DOMoveZ(GetTargetPosition().z, 0.5f)).
                     AppendCallback(() => animator.SetTrigger("windup")).
                     AppendInterval(windupLenght / 1.5f).
                     AppendCallback(() => CheckIfMoveLands()).
-                    AppendCallback(() => chosenMove.ShowMoveVisualEffect(target.HitPosition.transform, hasMoveLanded)).
+                    AppendCallback(() => chosenMove.ShowMoveVisualEffect(GetHitPositionOfTargets(), targets[0].HitPosition.transform.rotation, hasMoveLanded)).
                     AppendCallback(() => DealDamage()).
                     AppendInterval(attackLenght).
                     Append(transform.DOMove(originalTransform.position, 0.5f)).
@@ -180,8 +185,8 @@ public class Fighter : MonoBehaviour
                     AppendCallback(() => animator.SetTrigger("windup")).
                     AppendInterval(windupLenght).
                     AppendCallback(() => CheckIfMoveLands()).
-                    AppendCallback(() => chosenMove.ShowMoveVisualEffect(AimPosition.transform, hasMoveLanded)).
-                    AppendInterval(Vector3.Distance(AimPosition.transform.position, target.HitPosition.transform.position) / chosenMove.GetMoveVisualEffectPrefab().GetComponent<RangedDamageEffect>().projectileSpeed + 0.05f).
+                    AppendCallback(() => chosenMove.ShowMoveVisualEffect(AimPosition.transform.position, AimPosition.transform.rotation, hasMoveLanded)).
+                    AppendInterval(Vector3.Distance(AimPosition.transform.position, GetHitPositionOfTargets()) / chosenMove.GetMoveVisualEffectPrefab().GetComponent<RangedDamageEffect>().projectileSpeed + 0.05f).
                     AppendCallback(() => DealDamage()).
                     AppendInterval(attackLenght).
                     Append(transform.DOLocalMove(originalTransform.localPosition, 0.5f)).
@@ -196,6 +201,57 @@ public class Fighter : MonoBehaviour
         
         
 
+    }
+
+    private Vector3 GetTargetLocalPosition()
+    {
+        if (targets.Count == 0)
+        {
+            return Vector3.zero;
+        }
+
+        Vector3 meanVector = Vector3.zero;
+
+        foreach (Fighter pos in targets)
+        {
+            meanVector += pos.transform.localPosition;
+        }
+
+        return (meanVector / targets.Count);
+    }
+
+    private Vector3 GetTargetPosition()
+    {
+        if (targets.Count == 0)
+        {
+            return Vector3.zero;
+        }
+
+        Vector3 meanVector = Vector3.zero;
+
+        foreach (Fighter pos in targets)
+        {
+            meanVector += pos.transform.position;
+        }
+
+        return (meanVector / targets.Count);
+    }
+
+    public Vector3 GetHitPositionOfTargets()
+    {
+        if (targets.Count == 0)
+        {
+            return Vector3.zero;
+        }
+
+        Vector3 meanVector = Vector3.zero;
+
+        foreach (Fighter pos in targets)
+        {
+            meanVector += pos.HitPosition.transform.position;
+        }
+
+        return (meanVector / targets.Count);
     }
 
     private void CheckIfMoveLands()
@@ -213,10 +269,12 @@ public class Fighter : MonoBehaviour
 
     private void DealDamage()
     {
-        
         if (hasMoveLanded)
         {
-            target.currentHP -= chosenMove.CalculateDamage(this, target);
+            foreach (Fighter target in targets)
+            {
+                target.currentHP -= chosenMove.CalculateDamage(this, target);
+            }
         }
     }
 

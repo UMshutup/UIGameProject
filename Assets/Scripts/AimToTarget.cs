@@ -6,6 +6,6 @@ public class AimToTarget : MonoBehaviour
 
     void Update()
     {
-        transform.LookAt(fighter.target.HitPosition.transform);
+        transform.LookAt(fighter.GetHitPositionOfTargets());
     }
 }

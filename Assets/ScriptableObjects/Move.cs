@@ -8,6 +8,9 @@ public class Move : ScriptableObject
     [SerializeField] private float moveDamage;
     [SerializeField, Range(0f, 100f)] private float moveAccuracy;
     [SerializeField] private MoveCategory moveCategory;
+    [SerializeField] private bool hitsAWholeSquad;
+
+    [Space]
     [SerializeField] private GameObject moveVisualEffectPrefab;
     [SerializeField] private GameObject moveMissEffectPrefab;
 
@@ -35,6 +38,11 @@ public class Move : ScriptableObject
         return moveCategory;
     }
 
+    public bool GetHitsAWholeSquad()
+    {
+        return hitsAWholeSquad;
+    }
+
     public GameObject GetMoveVisualEffectPrefab()
     {
         return moveVisualEffectPrefab;
@@ -55,7 +63,7 @@ public class Move : ScriptableObject
         }
     }
 
-    public void ShowMoveVisualEffect(Transform _transform, bool _hasMoveLanded)
+    public void ShowMoveVisualEffect(Vector3 _position, Quaternion _rotation, bool _hasMoveLanded)
     {
         if (moveVisualEffectPrefab != null)
         {
@@ -63,23 +71,23 @@ public class Move : ScriptableObject
             {
                 if (_hasMoveLanded) 
                 {
-                    Instantiate(moveVisualEffectPrefab, _transform.position + new Vector3(0, 0, -0.05f), _transform.rotation);
+                    Instantiate(moveVisualEffectPrefab, _position + new Vector3(0, 0, -0.05f), _rotation);
                 }
                 else
                 {
-                    Instantiate(moveMissEffectPrefab, _transform.position + new Vector3(0, 0, -0.05f), _transform.rotation);
+                    Instantiate(moveMissEffectPrefab, _position + new Vector3(0, 0, -0.05f), _rotation);
                 }
             }
             else if (moveCategory == MoveCategory.RANGED)
             {
                 if (_hasMoveLanded)
                 {
-                    Instantiate(moveVisualEffectPrefab, _transform);
+                    Instantiate(moveVisualEffectPrefab, _position, _rotation);
                 }
                 else
                 {
-                    Instantiate(moveMissEffectPrefab, _transform.position + new Vector3(0, 0, -0.05f), _transform.rotation);
-                    Instantiate(moveVisualEffectPrefab, _transform.position, Quaternion.Euler(Random.Range(0.0f, 360.0f), Random.Range(0.0f, 360.0f), Random.Range(0.0f, 360.0f)));
+                    Instantiate(moveMissEffectPrefab, _position + new Vector3(0, 0, -0.05f), _rotation);
+                    Instantiate(moveVisualEffectPrefab, _position, Quaternion.Euler(Random.Range(0.0f, 360.0f), Random.Range(0.0f, 360.0f), Random.Range(0.0f, 360.0f)));
                 }
                 
             }
