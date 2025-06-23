@@ -2,8 +2,11 @@ using UnityEngine;
 
 public class AimToTarget : MonoBehaviour
 {
-    public Fighter fighter;
-
+    private Fighter fighter;
+    void Start()
+    {
+        fighter = GetComponentInParent<Fighter>();
+    }
     void Update()
     {
         transform.LookAt(fighter.GetHitPositionOfTargets());

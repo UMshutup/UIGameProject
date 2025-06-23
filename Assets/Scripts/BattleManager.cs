@@ -1,17 +1,16 @@
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UIElements;
 
 public class BattleManager : MonoBehaviour
 {
-    public List<GameObject> playerPrefabs;
-    public List<GameObject> enemyPrefabs;
+    public GameObject playerPrefab;
+    public GameObject enemyPrefab;
 
-    public List<Transform> playerPositions;
-    public List<Transform> enemyPositions;
+    public Transform playerPosition;
+    public Transform enemyPosition;
 
+<<<<<<< HEAD
     [HideInInspector] public List<GameObject> currentPlayers;
     [HideInInspector] public List<GameObject> currentEnemies;
     [HideInInspector] public List<Fighter> currentPlayerFighters;
@@ -26,11 +25,18 @@ public class BattleManager : MonoBehaviour
     private List<SelectableFighter> selectablePlayerFighters;
     private List<SelectableFighter> selectableEnemyFighters;
     private List<SelectableFighter> selectableFighters;
+=======
+    [HideInInspector] public GameObject currentPlayer;
+    [HideInInspector] public GameObject currentEnemy;
+    [HideInInspector] public Fighter currentPlayerFighter;
+    [HideInInspector] public Fighter currentEnemyFighter;
+>>>>>>> parent of 8a1b8ed (Added target selection and another player character)
 
     public BattleState state;
 
-    // booleans
+    public bool playerGoesFirst;
 
+<<<<<<< HEAD
     public bool hasRandomized;
 
     public bool isPlayer1Choosing;
@@ -40,21 +46,16 @@ public class BattleManager : MonoBehaviour
     public bool hasEveryoneChosenAMove;
 
     public bool hasEveryoneChosenATarget;
+=======
+    public bool hasMoveBeenSelected;
+>>>>>>> parent of 8a1b8ed (Added target selection and another player character)
 
     private void Start()
     {
-        currentPlayers = new List<GameObject>();
-        currentPlayerFighters = new List<Fighter>();
-
-        currentEnemies = new List<GameObject>();
-        currentEnemyFighters = new List<Fighter>();
-
-        
         state = BattleState.START;
-        
         SetupBattle();
-        
         state = BattleState.ACTIONTURN;
+<<<<<<< HEAD
 
         fighters = new List<Fighter>(FindObjectsByType<Fighter>(FindObjectsSortMode.None));
 
@@ -68,10 +69,15 @@ public class BattleManager : MonoBehaviour
 
         selectableFighters = new List<SelectableFighter>(FindObjectsByType<SelectableFighter>(FindObjectsSortMode.None).ToList());
 
+=======
+        currentPlayerFighter.target = currentEnemyFighter;
+        currentEnemyFighter.target = currentPlayerFighter;
+>>>>>>> parent of 8a1b8ed (Added target selection and another player character)
     }
 
     private void SetupBattle()
     {
+<<<<<<< HEAD
 
         for (int i = 0; i < playerPrefabs.Count; i++)
         {
@@ -94,33 +100,26 @@ public class BattleManager : MonoBehaviour
         {
             fighter.targets = new List<Fighter> { currentPlayerFighters[0] };
         }
+=======
+        currentPlayer = Instantiate(playerPrefab, playerPosition);
+        currentPlayerFighter = currentPlayer.GetComponent<Fighter>();
+        currentEnemy = Instantiate(enemyPrefab, enemyPosition);
+        currentEnemyFighter = currentEnemy.GetComponent<Fighter>();
+>>>>>>> parent of 8a1b8ed (Added target selection and another player character)
     }
 
-    public void MoveSelectionPlayer1(int _moveNumber)
+    public void MoveSelected(int _moveNumber)
     {
+        currentPlayerFighter.ChooseMove(_moveNumber);
+        currentEnemyFighter.ChooseMoveRandom();
 
-        currentPlayerFighters[0].ChooseMove(_moveNumber);
-        currentPlayerFighters[0].hasChosenMove = true;
-
-        foreach (Fighter fighter in currentEnemyFighters)
-        {
-            fighter.ChooseMoveRandom();
-            fighter.hasChosenMove = true;
-        }
-
-        isPlayer1Choosing = true;
-    }
-
-    public void MoveSelectionPlayer2(int _moveNumber)
-    {
-
-        currentPlayerFighters[1].ChooseMove(_moveNumber);
-
-        currentPlayerFighters[1].hasChosenMove = true;
+        hasMoveBeenSelected = true;
+        DecideWhosFirst();
     }
 
     private void Update()
     {
+<<<<<<< HEAD
         hasEveryoneChosenAMove = true;
         foreach (Fighter currentFighter in fighters)
         {
@@ -144,10 +143,14 @@ public class BattleManager : MonoBehaviour
 
         if (hasEveryoneChosenAMove && hasEveryoneChosenATarget)
         {
+=======
+        if (hasMoveBeenSelected) {
+>>>>>>> parent of 8a1b8ed (Added target selection and another player character)
             TurnOrder();
         }
         else
         {
+<<<<<<< HEAD
             foreach (Fighter fighter in currentPlayerFighters)
             {
                 fighter.ResetValues();
@@ -239,93 +242,72 @@ public class BattleManager : MonoBehaviour
 
                 selectable.canSelect = false;
             }
+=======
+            currentPlayerFighter.ResetValues();
+            currentEnemyFighter.ResetValues();
+>>>>>>> parent of 8a1b8ed (Added target selection and another player character)
         }
     }
 
     private void TurnOrder()
     {
-        if (!hasRandomized)
+        if (playerGoesFirst)
         {
-            fighters = fighters.OrderByDescending((val) => val.speed).ToList();
-            ShuffleSameSpeedFighters(fighters);
-            hasRandomized = true;
-        }
-        
-
-        for (int i = 0; i < fighters.Count; i++)
-        {
-            if (i != 0)
+            PlayerTurn();
+            if (currentPlayerFighter.hasFinishedAnimation)
             {
-                if (fighters[i - 1].hasFinishedAnimation && !fighters[i].hasAppendedAnimation)
-                {
-                    Debug.Log("Turn: " + i + "Attacker: " + fighters[i].fighterName);
-                    fighters[i].UseMove();
-                }
-                
+                EnemyTurn();
+            }
+        }
+        else
+        {
+            EnemyTurn();
+            if (currentEnemyFighter.hasFinishedAnimation)
+            {
+                PlayerTurn();
+            }
+        }
+        if (currentPlayerFighter.hasFinishedAnimation && currentEnemyFighter.hasFinishedAnimation)
+        {
+            state = BattleState.ACTIONTURN;
+            hasMoveBeenSelected = false;
+        }
+    }
+
+    private void PlayerTurn()
+    {
+        currentPlayerFighter.UseMove();
+        state = BattleState.PLAYERTURN;
+    }
+
+    private void EnemyTurn()
+    {
+        currentEnemyFighter.UseMove();
+        state = BattleState.ENEMYTURN;
+    }
+
+    private void DecideWhosFirst()
+    {
+        if (currentPlayerFighter.speed > currentEnemyFighter.speed)
+        {
+            playerGoesFirst = true;
+        }
+        else if (currentPlayerFighter.speed < currentEnemyFighter.speed)
+        {
+            playerGoesFirst = false;
+        }
+        else
+        {
+            if (Random.Range(0, 2) == 0)
+            {
+                playerGoesFirst = true;
             }
             else
             {
-                if (!fighters[i].hasAppendedAnimation)
-                {
-                    Debug.Log("Turn: " + i + "Attacker: " + fighters[i].fighterName);
-                    fighters[i].UseMove();
-                }
+                playerGoesFirst = false;
             }
         }
 
-        if (fighters[fighters.Count-1].hasFinishedAnimation)
-        {
-            state = BattleState.ACTIONTURN;
-            hasRandomized = false;
 
-            foreach (Fighter currentFighter in fighters)
-            {
-                currentFighter.hasChosenMove = false;
-            }
-
-            foreach (Fighter currentFighter in fighters)
-            {
-                currentFighter.hasChosenTarget = false;
-            }
-        }
-    }
-
-    void ShuffleSameSpeedFighters(List<Fighter> fighterList)
-    {
-        Dictionary<int, List<int>> speedGroups = new Dictionary<int, List<int>>();
-
-        for (int i = 0; i < fighterList.Count; i++)
-        {
-            int speed = (int)fighterList[i].speed;
-            if (!speedGroups.ContainsKey(speed))
-            {
-                speedGroups[speed] = new List<int>();
-            }
-            speedGroups[speed].Add(i);
-        }
-
-        foreach (var kvp in speedGroups)
-        {
-            List<int> indices = kvp.Value;
-            if (indices.Count <= 1)
-                continue; 
-
-            List<Fighter> fightersToShuffle = indices.Select(i => fighterList[i]).ToList();
-
-            ShuffleList(fightersToShuffle);
-
-            for (int i = 0; i < indices.Count; i++)
-            {
-                fighterList[indices[i]] = fightersToShuffle[i];
-            }
-        }
-    }
-    void ShuffleList<T>(List<T> list)
-    {
-        for (int i = 0; i < list.Count; i++)
-        {
-            int rnd = UnityEngine.Random.Range(i, list.Count);
-            (list[i], list[rnd]) = (list[rnd], list[i]);
-        }
     }
 }

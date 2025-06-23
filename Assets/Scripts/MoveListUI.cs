@@ -11,16 +11,13 @@ public class MoveListUI : MonoBehaviour
     [SerializeField] private GameObject choiceButtonPrefab;
 
     [SerializeField] private BattleManager battleManager;
-
-    [SerializeField] private int currentPlayerNumber;
-
     private MoveButtonLogic[] buttons;
 
     private void Start()
     {
         buttons = choiceList.transform.GetComponentsInChildren<MoveButtonLogic>(true);
 
-        for (int i = 0; i < battleManager.currentPlayerFighters[currentPlayerNumber].moves.Length; i++)
+        for (int i = 0; i < battleManager.currentPlayerFighter.moves.Length; i++)
         {
             buttons[i].gameObject.SetActive(true);
             buttons[i].SetMoveToButton(i);

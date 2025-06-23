@@ -28,7 +28,6 @@ public class Fighter : MonoBehaviour
     [HideInInspector] public int chosenMoveNumber;
 
     [HideInInspector] public bool hasMoveLanded;
-    [HideInInspector] public bool hasChosenMove;
 
     [Header("Positions")]
     public GameObject AimPosition;
@@ -46,8 +45,12 @@ public class Fighter : MonoBehaviour
     [HideInInspector] public float sleepIdleLenght;
 
     //Misc variables
+<<<<<<< HEAD
     [HideInInspector] public List<Fighter> targets;
     [HideInInspector] public bool hasChosenTarget;
+=======
+    [HideInInspector] public Fighter target;
+>>>>>>> parent of 8a1b8ed (Added target selection and another player character)
 
     private Transform originalTransform;
     [HideInInspector] public bool hasFinishedAnimation = false;
@@ -110,12 +113,15 @@ public class Fighter : MonoBehaviour
         }
     }
 
+<<<<<<< HEAD
     public void ChooseTarget(List<Fighter> _targets)
     {
         targets = _targets;
         hasChosenTarget = true;
     }
 
+=======
+>>>>>>> parent of 8a1b8ed (Added target selection and another player character)
     public void ChooseMoveRandom()
     {
         float moveNumber = Random.Range(0, moves.Length);
