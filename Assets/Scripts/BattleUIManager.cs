@@ -44,6 +44,7 @@ public class BattleUIManager : MonoBehaviour
     {
         var sequence = DOTween.Sequence();
 
+        // show player2 menu
         if (actionsPlayer1.activeSelf && battleManager.currentPlayerFighters[0].hasChosenTarget)
         {
             if (!hasAppendedAnimation1)
@@ -61,6 +62,7 @@ public class BattleUIManager : MonoBehaviour
             hasAppendedAnimation1 = false;
         }
 
+        // show player1 menu
         if (!battleManager.currentPlayerFighters[0].hasChosenTarget && !battleManager.currentPlayerFighters[1].hasChosenTarget)
         {
             if (!hasAppendedAnimation2)

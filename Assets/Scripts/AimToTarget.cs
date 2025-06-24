@@ -4,8 +4,8 @@ public class AimToTarget : MonoBehaviour
 {
     public Fighter fighter;
 
-    void Update()
+    public void Aim(Vector3 _aimPosition)
     {
-        transform.LookAt(fighter.target.HitPosition.transform);
+        transform.LookAt(_aimPosition);
     }
 }

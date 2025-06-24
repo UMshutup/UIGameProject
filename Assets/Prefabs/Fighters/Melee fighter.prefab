@@ -399,9 +399,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: bd7a2fa4082e2ae41bc2123425847457, type: 2}
   - {fileID: 11400000, guid: 22a74328dafb5574794ad57c6a851452, type: 2}
   - {fileID: 11400000, guid: b1aaee7d243e6b143a184057da9821bd, type: 2}
+  - {fileID: 11400000, guid: 6620fecded06f3d40aebddd1c0e7cf54, type: 2}
   chosenMove: {fileID: 0}
   chosenMoveNumber: 0
   hasMoveLanded: 0
+  hasChosenMove: 0
   AimPosition: {fileID: 4963505559432041450}
   HitPosition: {fileID: 3000719787711371628}
   idleLenght: 0
@@ -410,7 +412,8 @@ MonoBehaviour:
   attackLenght: 0
   hurtLenght: 0
   sleepIdleLenght: 0
-  target: {fileID: 0}
+  targets: []
+  hasChosenTarget: 0
   hasFinishedAnimation: 0
   hasAppendedAnimation: 0
 --- !u!114 &6551776854334475821
@@ -428,6 +431,8 @@ MonoBehaviour:
   spriteRenderer: {fileID: 7045812003053770018}
   canSelect: 0
   hasSelectedTarget: 0
+  isOnSprite: 0
+  canGlow: 0
 --- !u!65 &2935098772837426701
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -435,7 +440,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3686999765468893870}
-  m_Material: {fileID: 13400000, guid: a5d69aaa20f23ae469f82b35192a333c, type: 2}
+  m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0

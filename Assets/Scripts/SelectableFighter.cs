@@ -9,24 +9,36 @@ public class SelectableFighter : MonoBehaviour
     [HideInInspector] public bool canSelect = false;
     [HideInInspector] public bool hasSelectedTarget;
     private bool hasAppended = false;
-    private bool isOnSprite = false;
+    [HideInInspector] public bool isOnSprite = false;
+    [HideInInspector] public bool canGlow = false;
 
     private void OnMouseEnter()
     {
         if (canSelect)
         {
             isOnSprite = true;
+            canGlow = true;
+        }
+        else
+        {
+            isOnSprite = false;
+            canGlow = false;
         }
     }
 
     private void OnMouseExit()
     {
         isOnSprite = false;
+        canGlow = false;
     }
 
     private void OnMouseDown()
     {
-        if (canSelect)
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+            return;
+        }
+        if (canSelect && isOnSprite)
         {
             hasSelectedTarget = true;
         }
@@ -36,7 +48,7 @@ public class SelectableFighter : MonoBehaviour
     {
         var sequence = DOTween.Sequence();
 
-        if (isOnSprite)
+        if (canGlow)
         {
             if (!hasAppended)
             {

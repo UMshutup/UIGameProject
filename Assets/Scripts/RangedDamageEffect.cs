@@ -6,7 +6,7 @@ public class RangedDamageEffect : MonoBehaviour
     public float projectileSpeed;
     void Update()
     {
-        transform.position += transform.right * Time.deltaTime * projectileSpeed;
+        transform.position += transform.forward * Time.deltaTime * projectileSpeed;
         Destroy(gameObject, 5);
     }
 }

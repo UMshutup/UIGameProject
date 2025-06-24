@@ -26,7 +26,6 @@ public class MoveButtonLogic : MonoBehaviour
         else if(currentPlayerNumber == 1)
         {
             button.onClick.AddListener(() => battleManager.MoveSelectionPlayer2(moveNumber));
-            battleUIManager.ShowHideMoveList2();
         }
         
     }

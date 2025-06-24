@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03d7adde6756f1b46822aab0abc576ac, type: 3}
+  m_Name: TestMultiiShot
+  m_EditorClassIdentifier: 
+  moveName: Test Multi Shot
+  moveDescription: Deals melee damage
+  moveDamage: 1
+  moveAccuracy: 100
+  moveCategory: 1
+  hitsAWholeSquad: 1
+  moveVisualEffectPrefab: {fileID: 780169709837173935, guid: 2859c653222ac3f40aa5271fc1610ebd, type: 3}
+  moveMissEffectPrefab: {fileID: 3062664297577719860, guid: 347ca88f1f177c44ab79e2aaa04be71d, type: 3}
