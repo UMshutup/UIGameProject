@@ -16,23 +16,33 @@ public class MoveListUI : MonoBehaviour
 
     private MoveButtonLogic[] buttons;
 
-    private void Start()
-    {
-        buttons = choiceList.transform.GetComponentsInChildren<MoveButtonLogic>(true);
-
-        for (int i = 0; i < battleManager.currentPlayerFighters[currentPlayerNumber].moves.Length; i++)
-        {
-            buttons[i].gameObject.SetActive(true);
-            buttons[i].SetMoveToButton(i);
-        }
-
-        choiceList.sizeDelta = new Vector2(choiceList.rect.width, choiceList.childCount * 125);
-        scrollBar.value = 2;
-    }
+    private bool hasScrolled = false;
 
     private void Update()
     {
+        buttons = choiceList.transform.GetComponentsInChildren<MoveButtonLogic>(true);
+
+        for (int i = 0; i < battleManager.currentPlayerFighters[currentPlayerNumber].currentMoves.Count; i++)
+        {
+            buttons[i].gameObject.SetActive(true);
+            buttons[i].SetMoveToButton(i, battleManager.currentPlayerFighters[currentPlayerNumber].currentMoves[i].GetMoveApCost());
+            if (battleManager.currentPlayerFighters[currentPlayerNumber].currentMoves[i].GetMoveApCost() > battleManager.currentPlayerFighters[currentPlayerNumber].currentActionPoints)
+            {
+                buttons[i].gameObject.GetComponent<Button>().interactable = false;
+            }
+            else
+            {
+                buttons[i].gameObject.GetComponent<Button>().interactable = true;
+            }
+        }
+
+        choiceList.sizeDelta = new Vector2(choiceList.rect.width, choiceList.childCount * 125);
         
+        if (!hasScrolled)
+        {
+            scrollBar.value = 2;
+            hasScrolled = true;
+        }
     }
 
 }

@@ -392,18 +392,23 @@ MonoBehaviour:
   meleeDefence: 3
   rangedDefence: 2
   speed: 4
+  maxActionPoints: 10
   currentHP: 0
   previousHP: 0
+  currentActionPoints: 0
+  actionPointRegeneration: 2
+  fighterState: 0
   moves:
   - {fileID: 11400000, guid: b5498487bd839714a9a1eebac4bb7fc1, type: 2}
   - {fileID: 11400000, guid: bd7a2fa4082e2ae41bc2123425847457, type: 2}
-  - {fileID: 11400000, guid: 22a74328dafb5574794ad57c6a851452, type: 2}
-  - {fileID: 11400000, guid: b1aaee7d243e6b143a184057da9821bd, type: 2}
   - {fileID: 11400000, guid: 6620fecded06f3d40aebddd1c0e7cf54, type: 2}
-  chosenMove: {fileID: 0}
+  - {fileID: 11400000, guid: 8306f602bde82d8449e7647b01b6cab9, type: 2}
+  - {fileID: 11400000, guid: 56cd7199d68cb27408c24db4b13b0d2f, type: 2}
   chosenMoveNumber: 0
   hasMoveLanded: 0
   hasChosenMove: 0
+  isNPC: 0
+  isEnemy: 0
   AimPosition: {fileID: 4963505559432041450}
   HitPosition: {fileID: 3000719787711371628}
   idleLenght: 0
@@ -416,6 +421,7 @@ MonoBehaviour:
   hasChosenTarget: 0
   hasFinishedAnimation: 0
   hasAppendedAnimation: 0
+  hasAppendedKnockout: 0
 --- !u!114 &6551776854334475821
 MonoBehaviour:
   m_ObjectHideFlags: 0

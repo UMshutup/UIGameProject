@@ -17,25 +17,39 @@ public class Fighter : MonoBehaviour
     public float meleeDefence;
     public float rangedDefence;
     public float speed;
+    public int maxActionPoints;
 
     [HideInInspector] public float currentHP;
     [HideInInspector] public float previousHP;
 
-    [Header("Moves")]
-    public Move[] moves;
+    [HideInInspector] public int currentActionPoints;
+    [HideInInspector] public int actionPointRegeneration = 2;
 
-    [HideInInspector] public Move chosenMove;
+    [Header("State")]
+    public FighterState fighterState;
+
+    [Header("Moves")]
+    [SerializeField] private List<Move> moves;
+
+    [HideInInspector] public List<MoveInstance> currentMoves;
+
+    [HideInInspector] public MoveInstance chosenMove;
     [HideInInspector] public int chosenMoveNumber;
 
     [HideInInspector] public bool hasMoveLanded;
     [HideInInspector] public bool hasChosenMove;
 
+    [Header("NPC variables")]
+    public bool isNPC;
+    public bool isEnemy;
+
     [Header("Positions")]
     public GameObject AimPosition;
     public GameObject HitPosition;
 
-    [Header("Animator")]
+    // useful
     private Animator animator;
+    private SpriteRenderer spriteRenderer;
 
     //Animation lenghts
     [HideInInspector] public float idleLenght;
@@ -53,11 +67,13 @@ public class Fighter : MonoBehaviour
     [HideInInspector] public bool hasFinishedAnimation = false;
 
     [HideInInspector] public bool hasAppendedAnimation;
+    [HideInInspector] public bool hasAppendedKnockout;
 
 
     private void Start()
     {
         animator = GetComponent<Animator>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
         UpdateAnimClipTimes();
 
         currentHP = maxHP;
@@ -67,7 +83,21 @@ public class Fighter : MonoBehaviour
 
         InvokeRepeating("PlayAltIdleAnimation", 1, 1);
 
-        chosenMove = moves[0];
+        MoveSetup();
+
+        chosenMove = currentMoves[0];
+
+        fighterState = FighterState.NORMAL;
+    }
+
+    private void MoveSetup()
+    {
+        currentMoves = new List<MoveInstance>();
+
+        for (int i = 0; i< moves.Count; i++)
+        {
+            currentMoves.Add(new MoveInstance(moves[i]));
+        }
     }
 
     public void UpdateAnimClipTimes()
@@ -101,14 +131,44 @@ public class Fighter : MonoBehaviour
 
     public void ChooseMove(int _moveNumber)
     {
-        for (int i = 0; i < moves.Length; i++)
+        for (int i = 0; i < currentMoves.Count; i++)
         {
             if (i == _moveNumber)
             {
-                chosenMove = moves[i];
+                chosenMove = currentMoves[i];
                 chosenMoveNumber = i;
+                hasChosenMove = true;
             }
         }
+    }
+
+    public void ChooseMoveRandom()
+    {
+        List<MoveInstance> usableMoves = new List<MoveInstance>();
+        for (int i = 0; i < currentMoves.Count; i++)
+        {
+            if (currentMoves[i].GetMoveApCost() <= currentActionPoints)
+            {
+                usableMoves.Add(currentMoves[i]);
+            }
+        }
+
+
+        int moveNumber = Random.Range(0, usableMoves.Count);
+        for (int i = 0; i < usableMoves.Count; i++)
+        {
+            if (i == moveNumber)
+            {
+                chosenMove = usableMoves[moveNumber];
+                chosenMoveNumber = i;
+                hasChosenMove = true;
+            }
+        }
+    }
+
+    public void ChooseMoveAI(List<Fighter> _currentTeam, List<Fighter> _opposingTeam)
+    {
+        
     }
 
     public void ChooseTarget(List<Fighter> _targets)
@@ -117,22 +177,78 @@ public class Fighter : MonoBehaviour
         hasChosenTarget = true;
     }
 
-    public void ChooseMoveRandom()
+    public void ChooseTargetAI(List<Fighter> _currentTeam, List<Fighter> _opposingTeam)
     {
-        float moveNumber = Random.Range(0, moves.Length);
-        for (int i = 0; i < moves.Length; i++)
+        if (chosenMove.GetMoveTarget() == MoveTarget.BOTH || chosenMove.GetMoveTarget() == MoveTarget.ENEMY)
         {
-            if (i == moveNumber)
+            if (chosenMove.GetHitsAWholeSquad())
             {
-                chosenMove = moves[i];
-                chosenMoveNumber = i;
+                targets = _opposingTeam;
+                hasChosenTarget = true;
+                return;
+            }
+            else
+            {
+                targets = new List<Fighter> { _opposingTeam[Random.Range(0, _opposingTeam.Count)] };
+                hasChosenTarget = true;
+                return;
             }
         }
+        else if(chosenMove.GetMoveTarget() == MoveTarget.PLAYER)
+        {
+            if (chosenMove.GetHitsAWholeSquad())
+            {
+                targets = _currentTeam;
+                hasChosenTarget = true;
+                return;
+            }
+            else
+            {
+                targets = new List<Fighter> { _currentTeam[Random.Range(0, _currentTeam.Count)] };
+                hasChosenTarget = true;
+                return;
+            }
+        }
+        else if (chosenMove.GetMoveTarget() == MoveTarget.SELF)
+        {
+            targets = new List<Fighter> { this };
+            hasChosenTarget = true;
+            return;
+        }
+    }
+
+    public void RemoveAP()
+    {
+        if (currentActionPoints - chosenMove.GetMoveApCost() >= 0)
+        {
+            currentActionPoints -= chosenMove.GetMoveApCost();
+        }
+        else
+        {
+            currentActionPoints = 0;
+        }
+    }
+
+    public void RegenerateAP()
+    {
+        if (currentActionPoints + actionPointRegeneration <= maxActionPoints)
+        {
+            currentActionPoints += actionPointRegeneration;
+        }
+        else
+        {
+            currentActionPoints = maxActionPoints;
+        }
+    }
+
+    public void ResetAP()
+    {
+        currentActionPoints = 0;
     }
 
     private void Update()
     {
-
+        KnockoutAnimation();
 
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("alt_idle"))
         {
@@ -163,46 +279,73 @@ public class Fighter : MonoBehaviour
     {
         var sequence = DOTween.Sequence();
 
-        if (chosenMove.GetMoveCategory() == MoveCategory.MELEE)
+        if (fighterState == FighterState.NORMAL)
         {
-            if (!hasAppendedAnimation)
+            if (chosenMove.GetMoveCategory() == MoveCategory.MELEE)
             {
-                sequence.Append(transform.DOMoveX(GetTargetLocalPosition().x - 0.10f, 0.5f)).
-                    Join(transform.DOMoveZ(GetTargetPosition().z, 0.5f)).
-                    AppendCallback(() => animator.SetTrigger("windup")).
-                    AppendInterval(windupLenght / 1.5f).
-                    AppendCallback(() => CheckIfMoveLands()).
-                    AppendCallback(() => HitVisualEffectMeelee()).
-                    AppendCallback(() => DealDamage()).
-                    AppendInterval(attackLenght).
-                    Append(transform.DOMove(originalTransform.position, 0.5f)).
-                    AppendCallback(() => hasFinishedAnimation = true);
-                hasAppendedAnimation = true;
+                if (!hasAppendedAnimation)
+                {
+                    sequence.AppendCallback(() => RemoveAP()).
+                        Append(transform.DOMoveX(GetTargetLocalPosition().x - 0.10f, 0.5f)).
+                        Join(transform.DOMoveZ(GetTargetPosition().z, 0.5f)).
+                        AppendCallback(() => animator.SetTrigger("windup")).
+                        AppendInterval(windupLenght / 1.5f).
+                        AppendCallback(() => CheckIfMoveLands()).
+                        AppendCallback(() => HitVisualEffectMeelee()).
+                        AppendCallback(() => DealDamage()).
+                        AppendInterval(attackLenght).
+                        Append(transform.DOMove(originalTransform.position, 0.5f)).
+                        AppendCallback(() => hasFinishedAnimation = true);
+                    hasAppendedAnimation = true;
+                }
             }
-        }
-        else if (chosenMove.GetMoveCategory() == MoveCategory.RANGED)
-        {
-            if (!hasAppendedAnimation)
+            else if (chosenMove.GetMoveCategory() == MoveCategory.RANGED)
             {
-                sequence.Append(transform.DOLocalMove(originalTransform.localPosition - new Vector3(0.25f, 0, 0), 0.5f)).
-                    AppendCallback(() => animator.SetTrigger("windup")).
-                    AppendInterval(windupLenght).
-                    AppendCallback(() => CheckIfMoveLands()).
-                    AppendCallback(() => HitVisualEffectRanged()).
-                    AppendInterval(Vector3.Distance(AimPosition.transform.position, GetHitPositionOfTargets()) / chosenMove.GetMoveVisualEffectPrefab().GetComponent<RangedDamageEffect>().projectileSpeed + 0.05f).
-                    AppendCallback(() => DealDamage()).
-                    AppendInterval(attackLenght).
-                    Append(transform.DOLocalMove(originalTransform.localPosition, 0.5f)).
-                    AppendCallback(() => hasFinishedAnimation = true);
-                hasAppendedAnimation = true;
+                if (!hasAppendedAnimation)
+                {
+                    sequence.AppendCallback(() => RemoveAP()).
+                        Append(transform.DOLocalMove(originalTransform.localPosition - new Vector3(0.25f, 0, 0), 0.5f)).
+                        AppendCallback(() => animator.SetTrigger("windup")).
+                        AppendInterval(windupLenght).
+                        AppendCallback(() => CheckIfMoveLands()).
+                        AppendCallback(() => HitVisualEffectRanged()).
+                        AppendInterval(Vector3.Distance(AimPosition.transform.position, GetHitPositionOfTargets()) / chosenMove.GetMoveVisualEffectPrefab().GetComponent<RangedDamageEffect>().projectileSpeed + 0.05f).
+                        AppendCallback(() => DealDamage()).
+                        AppendInterval(attackLenght).
+                        Append(transform.DOLocalMove(originalTransform.localPosition, 0.5f)).
+                        AppendCallback(() => hasFinishedAnimation = true);
+                    hasAppendedAnimation = true;
+                }
+            }
+            else
+            {
+                Debug.Log("Error: no animation for move category");
             }
         }
         else
         {
-            Debug.Log("Error: no animation for move category");
+            if (!hasAppendedAnimation)
+            {
+                sequence.Append(transform.DOMoveX(originalTransform.position.x + 0.1f, 0.1f)).
+                    Append(transform.DOMoveX(originalTransform.position.x - 0.1f, 0.1f)).
+                    Append(transform.DOMoveX(originalTransform.position.x, 0.1f)).
+                    AppendCallback(() => hasFinishedAnimation = true);
+
+                hasAppendedAnimation = true;
+            }
         }
 
 
+
+    }
+
+    public void KnockoutAnimation()
+    {
+        if (currentHP <= 0)
+        {
+            animator.SetTrigger("sleep_idle");
+            fighterState = FighterState.KNOCKOUT;
+        }
 
     }
 
@@ -298,9 +441,6 @@ public class Fighter : MonoBehaviour
         }
     }
 
-
-
-
     private bool HasTakenDamage()
     {
         bool hasTakenDamage;
@@ -312,9 +452,12 @@ public class Fighter : MonoBehaviour
 
     public void PlayAltIdleAnimation()
     {
-        if (Random.Range(0, 8) == 0)
+        if (fighterState == FighterState.NORMAL)
         {
-            animator.SetTrigger("alt_idle");
+            if (Random.Range(0, 8) == 0)
+            {
+                animator.SetTrigger("alt_idle");
+            }
         }
 
     }
@@ -325,4 +468,6 @@ public class Fighter : MonoBehaviour
         hasAppendedAnimation = false;
 
     }
+
+    
 }

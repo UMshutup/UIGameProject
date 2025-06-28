@@ -7,12 +7,16 @@ public class Move : ScriptableObject
     [SerializeField] private string moveDescription;
     [SerializeField] private float moveDamage;
     [SerializeField, Range(0f, 100f)] private float moveAccuracy;
+    [SerializeField, Range(0, 10)] private int moveApCost;
     [SerializeField] private MoveCategory moveCategory;
+    [SerializeField] private MoveTarget moveTarget;
     [SerializeField] private bool hitsAWholeSquad;
 
     [Space]
     [SerializeField] private GameObject moveVisualEffectPrefab;
     [SerializeField] private GameObject moveMissEffectPrefab;
+
+    private bool hasChangedTarget = false;
 
     public string GetMoveName()
     {
@@ -33,9 +37,24 @@ public class Move : ScriptableObject
         return moveAccuracy;
     }
 
+    public int GetMoveApCost()
+    {
+        return moveApCost;
+    }
+
     public MoveCategory GetMoveCategory()
     {
         return moveCategory;
+    }
+
+    public MoveTarget GetMoveTarget() 
+    { 
+        return moveTarget;
+    }
+
+    public void SetMoveTarget(MoveTarget _moveTarget)
+    {
+        this.moveTarget = _moveTarget;
     }
 
     public bool GetHitsAWholeSquad()
@@ -48,20 +67,9 @@ public class Move : ScriptableObject
         return moveVisualEffectPrefab;
     }
 
-    public float CalculateDamage(Fighter user, Fighter target)
+    public GameObject GetMoveMissEffectPrefab()
     {
-        if (moveCategory == MoveCategory.MELEE && target.meleeDefence != 0)
-        {
-            return (moveDamage * user.meleeDamage / target.meleeDefence) / 2;
-        }
-        else if (moveCategory == MoveCategory.RANGED && target.rangedDefence != 0)
-        {
-            return (moveDamage * user.rangedDamage / target.rangedDefence) / 2;
-        }
-        else
-        {
-            return 0;
-        }
+        return moveMissEffectPrefab;
     }
 
     public void ShowMoveVisualEffect(Vector3 _position, Quaternion _rotation, bool _hasMoveLanded)
@@ -93,6 +101,24 @@ public class Move : ScriptableObject
 
             }
         }
+    }
+
+    public void SetOppositeMoveTarget()
+    {
+        if (!hasChangedTarget)
+        {
+            if (GetMoveTarget() == MoveTarget.PLAYER)
+            {
+                SetMoveTarget(MoveTarget.ENEMY);
+                hasChangedTarget = true;
+            }
+            if (GetMoveTarget() == MoveTarget.ENEMY)
+            {
+                SetMoveTarget(MoveTarget.PLAYER);
+                hasChangedTarget = true;
+            }
+        }
+
     }
 
 }

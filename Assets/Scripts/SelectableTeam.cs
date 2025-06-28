@@ -8,11 +8,12 @@ public class SelectableTeam : MonoBehaviour
 {
     private List<SelectableFighter> selectableFighters;
     private List<Fighter> fighters;
-    public BattleManager battleManager;
 
     private bool selectWholeTeam;
     private bool isOnSpriteWholeTeam;
     private SelectableFighter selectedFighter;
+
+    public MoveTarget teamTarget;
 
     private void Start()
     {
@@ -26,23 +27,16 @@ public class SelectableTeam : MonoBehaviour
         }
     }
 
-    public void SelectTeamOrTarget(List<Fighter> _playerFighters, bool _isPlayer1Choosing)
+    public void SelectTeamOrTarget(Fighter _fighter, BattleState _currentBattleState, BattleState _choosingStateOfPlayer)
     {
-
-        ChooseTarget(_playerFighters[0], _isPlayer1Choosing);
-        ChooseTarget(_playerFighters[1], !_isPlayer1Choosing);
-
-    }
-
-    private void ChooseTarget(Fighter _fighter, bool _isPlayer1Choosing)
-    {
-        if (_fighter.hasChosenMove && _isPlayer1Choosing)
+        if ((teamTarget == _fighter.chosenMove.GetMoveTarget() || (_fighter.chosenMove.GetMoveTarget() == MoveTarget.BOTH) || (_fighter.chosenMove.GetMoveTarget() == MoveTarget.SELF)) 
+            && _fighter.hasChosenMove && _currentBattleState == _choosingStateOfPlayer)
         {
             if (_fighter.chosenMove.GetHitsAWholeSquad())
             {
                 foreach (SelectableFighter selectable in selectableFighters)
                 {
-                    if (_fighter.hasChosenMove && _isPlayer1Choosing && !_fighter.hasChosenTarget)
+                    if (_fighter.hasChosenMove && _currentBattleState == _choosingStateOfPlayer && !_fighter.hasChosenTarget)
                     {
                         selectable.canSelect = true;
                     }
@@ -84,7 +78,7 @@ public class SelectableTeam : MonoBehaviour
                         selectWholeTeam = true;
                     }
 
-                    if (selectWholeTeam && _isPlayer1Choosing)
+                    if (selectWholeTeam && _currentBattleState == _choosingStateOfPlayer)
                     {
                         selectedFighter.canSelect = false;
                         selectedFighter.canGlow = false;
@@ -97,7 +91,6 @@ public class SelectableTeam : MonoBehaviour
 
                         isOnSpriteWholeTeam = false;
                         selectWholeTeam = false;
-                        _isPlayer1Choosing = false;
                     }
 
                 }
@@ -106,9 +99,21 @@ public class SelectableTeam : MonoBehaviour
             {
                 foreach (SelectableFighter selectable in selectableFighters)
                 {
-                    if (_fighter.hasChosenMove && _isPlayer1Choosing && !_fighter.hasChosenTarget)
+                    if (_fighter.hasChosenMove && _currentBattleState == _choosingStateOfPlayer && !_fighter.hasChosenTarget)
                     {
-                        selectable.canSelect = true;
+                        if (_fighter.chosenMove.GetMoveTarget() != MoveTarget.SELF)
+                        {
+                            selectable.canSelect = true;
+                        }
+                        else
+                        {
+                            if (selectable.GetComponent<Fighter>().Equals(_fighter))
+                            {
+                                selectable.canSelect = true;
+                            }
+                        }
+
+                        
                     }
                     else
                     {
@@ -116,7 +121,7 @@ public class SelectableTeam : MonoBehaviour
                         selectable.hasSelectedTarget = false;
                     }
 
-                    if (selectable.hasSelectedTarget && _isPlayer1Choosing)
+                    if (selectable.hasSelectedTarget && _currentBattleState == _choosingStateOfPlayer)
                     {
                         _fighter.ChooseTarget(new List<Fighter> { selectable.gameObject.GetComponent<Fighter>() });
 
@@ -124,13 +129,16 @@ public class SelectableTeam : MonoBehaviour
 
                         selectable.canSelect = false;
 
-                        _isPlayer1Choosing = false;
                     }
                 }
             }
         }
+
+
     }
 
-    
+
+
+
 
 }

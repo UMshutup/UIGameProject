@@ -33,6 +33,8 @@ public class BattleManager : MonoBehaviour
 
     public bool hasEveryoneChosenATarget;
 
+    private bool hasAddedAP = false;
+
     private void Start()
     {
         currentPlayers = new List<GameObject>();
@@ -46,7 +48,7 @@ public class BattleManager : MonoBehaviour
         
         SetupBattle();
         
-        state = BattleState.ACTIONTURN;
+        state = BattleState.DECISIONTURNPLAYER1;
 
         fighters = new List<Fighter>(FindObjectsByType<Fighter>(FindObjectsSortMode.None));
 
@@ -70,11 +72,14 @@ public class BattleManager : MonoBehaviour
         foreach (Fighter fighter in currentPlayerFighters)
         {
             fighter.targets = new List<Fighter> { currentEnemyFighters[0] };
+            fighter.ResetAP();
         }
 
         foreach (Fighter fighter in currentEnemyFighters)
         {
             fighter.targets = new List<Fighter> { currentPlayerFighters[0] };
+            fighter.isEnemy = true;
+            fighter.ResetAP();
         }
     }
 
@@ -82,15 +87,8 @@ public class BattleManager : MonoBehaviour
     {
 
         currentPlayerFighters[0].ChooseMove(_moveNumber);
-        currentPlayerFighters[0].hasChosenMove = true;
 
-        foreach (Fighter fighter in currentEnemyFighters)
-        {
-            fighter.ChooseMoveRandom();
-            fighter.hasChosenMove = true;
-        }
-
-        isPlayer1Choosing = true;
+        MoveSelectionEnemies();
     }
 
     public void MoveSelectionPlayer2(int _moveNumber)
@@ -99,12 +97,43 @@ public class BattleManager : MonoBehaviour
         currentPlayerFighters[1].ChooseMove(_moveNumber);
 
         currentPlayerFighters[1].hasChosenMove = true;
+    }
 
-        isPlayer1Choosing = false;
+    public void MoveSelectionEnemies()
+    {
+        foreach (Fighter fighter in currentEnemyFighters)
+        {
+            fighter.ChooseMoveRandom();
+        }
     }
 
     private void Update()
     {
+        if (state == BattleState.DECISIONTURNPLAYER1)
+        {
+            if (!hasAddedAP)
+            {
+                foreach (Fighter fighter in currentPlayerFighters)
+                {
+                    fighter.RegenerateAP();
+                    hasAddedAP = true;
+                }
+
+                foreach (Fighter fighter in currentEnemyFighters)
+                {
+                    fighter.RegenerateAP();
+                    hasAddedAP = true;
+                }
+
+                
+            }
+        }
+        else
+        {
+            hasAddedAP = false;
+        }
+
+
         hasEveryoneChosenAMove = true;
         foreach (Fighter currentFighter in fighters)
         {
@@ -146,17 +175,28 @@ public class BattleManager : MonoBehaviour
 
     private void TargetSelection()
     {
-        playerTeam.SelectTeamOrTarget(currentPlayerFighters, isPlayer1Choosing);
-        enemyTeam.SelectTeamOrTarget(currentPlayerFighters, isPlayer1Choosing);
+        playerTeam.SelectTeamOrTarget(currentPlayerFighters[0], state, BattleState.DECISIONTURNPLAYER1);
+        playerTeam.SelectTeamOrTarget(currentPlayerFighters[1], state, BattleState.DECISIONTURNPLAYER2);
+
+        enemyTeam.SelectTeamOrTarget(currentPlayerFighters[0], state, BattleState.DECISIONTURNPLAYER1);
+        enemyTeam.SelectTeamOrTarget(currentPlayerFighters[1], state, BattleState.DECISIONTURNPLAYER2);
+
+        if (currentPlayerFighters[0].hasChosenMove && currentPlayerFighters[0].hasChosenTarget)
+        {
+            state = BattleState.DECISIONTURNPLAYER2;
+        }
 
         foreach (Fighter enemyFighter in currentEnemyFighters)
         {
-            enemyFighter.ChooseTarget(new List<Fighter> { currentPlayerFighters[Random.Range(0, currentPlayerFighters.Count-1)] });
+            enemyFighter.ChooseTargetAI(currentEnemyFighters, currentPlayerFighters);
         }
     }
 
     private void TurnOrder()
     {
+
+        state = BattleState.ACTIONTURN;
+
         if (!hasRandomized)
         {
             fighters = fighters.OrderByDescending((val) => val.speed).ToList();
@@ -188,7 +228,7 @@ public class BattleManager : MonoBehaviour
 
         if (fighters[fighters.Count-1].hasFinishedAnimation)
         {
-            state = BattleState.ACTIONTURN;
+            state = BattleState.DECISIONTURNPLAYER1;
             hasRandomized = false;
 
             foreach (Fighter currentFighter in fighters)

@@ -1,5 +1,6 @@
 using DG.Tweening;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,19 +9,18 @@ public class BattleUIManager : MonoBehaviour
 {
     [SerializeField] private BattleManager battleManager;
 
-    [Header("Player UI")]
-    [SerializeField] private TextMeshProUGUI playerNameText;
-    [SerializeField] private Image playerHealthBar;
-
-    [Header("Enemy UI")]
-    [SerializeField] private TextMeshProUGUI enemyNameText;
-    [SerializeField] private Image enemyHealthBar;
-
     [Header("Game UI")]
     [SerializeField] private GameObject actionsPlayer1;
     [SerializeField] private GameObject actionsPlayer2;
     [SerializeField] private GameObject moveListPlayer1;
     [SerializeField] private GameObject moveListPlayer2;
+
+    [Header("StatsUI")]
+    [SerializeField] private GameObject playerStats;
+    [SerializeField] private GameObject enemyStats;
+
+    private List<FighterStatsUI> playerUI;
+    private List<FighterStatsUI> enemyUI;
 
 
 
@@ -38,14 +38,47 @@ public class BattleUIManager : MonoBehaviour
         {
             moveListPlayer2.SetActive(false);
         }
+
+        playerUI = new List<FighterStatsUI>();
+
+        enemyUI = new List<FighterStatsUI>();
+
+        List<FighterStatsUI> playerUITotal = playerStats.GetComponentsInChildren<FighterStatsUI>(true).ToList();
+        for (int i = 0; i< battleManager.currentPlayerFighters.Count; i++)
+        {
+            playerUI.Add(playerUITotal[i]);
+            playerUI[i].gameObject.SetActive(true);
+        }
+
+        List<FighterStatsUI> enemyUITotal = enemyStats.GetComponentsInChildren<FighterStatsUI>(true).ToList();
+        for (int i = 0; i < battleManager.currentEnemyFighters.Count; i++)
+        {
+            enemyUI.Add(enemyUITotal[i]);
+            enemyUI[i].gameObject.SetActive(true);
+        }
     }
 
     private void Update()
     {
+        MenuAnimations();
+
+        for (int i = 0; i < playerUI.Count; i++)
+        {
+            playerUI[i].UpdateStats(battleManager.currentPlayerFighters[i]);
+        }
+
+        for (int i = 0; i < enemyUI.Count; i++)
+        {
+            enemyUI[i].UpdateStats(battleManager.currentEnemyFighters[i]);
+        }
+    }
+
+    private void MenuAnimations()
+    {
         var sequence = DOTween.Sequence();
 
         // show player2 menu
-        if (actionsPlayer1.activeSelf && battleManager.currentPlayerFighters[0].hasChosenTarget)
+        if (battleManager.state == BattleState.DECISIONTURNPLAYER2 && !actionsPlayer2.activeSelf)
         {
             if (!hasAppendedAnimation1)
             {
@@ -63,7 +96,7 @@ public class BattleUIManager : MonoBehaviour
         }
 
         // show player1 menu
-        if (!battleManager.currentPlayerFighters[0].hasChosenTarget && !battleManager.currentPlayerFighters[1].hasChosenTarget)
+        if (battleManager.state == BattleState.DECISIONTURNPLAYER1 && !actionsPlayer1.activeSelf)
         {
             if (!hasAppendedAnimation2)
             {
@@ -79,8 +112,6 @@ public class BattleUIManager : MonoBehaviour
         {
             hasAppendedAnimation2 = false;
         }
-
-        AssignUIInformation();
 
         if (battleManager.currentPlayerFighters[0].hasChosenMove)
         {
@@ -111,16 +142,6 @@ public class BattleUIManager : MonoBehaviour
         {
             hasAppendedAnimation4 = false;
         }
-
-    }
-
-    private void AssignUIInformation()
-    {
-        playerNameText.text = battleManager.currentPlayerFighters[0].fighterName;
-        playerHealthBar.fillAmount = battleManager.currentPlayerFighters[0].currentHP / battleManager.currentPlayerFighters[0].maxHP;
-
-        enemyNameText.text = battleManager.currentEnemyFighters[0].fighterName;
-        enemyHealthBar.fillAmount = battleManager.currentEnemyFighters[0].currentHP / battleManager.currentEnemyFighters[0].maxHP;
     }
 
     public void ShowHideMoveList1()

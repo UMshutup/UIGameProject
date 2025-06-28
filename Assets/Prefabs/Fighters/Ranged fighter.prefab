@@ -407,18 +407,22 @@ MonoBehaviour:
   meleeDefence: 2
   rangedDefence: 3
   speed: 5
+  maxActionPoints: 10
   currentHP: 0
   previousHP: 0
+  currentActionPoints: 0
+  actionPointRegeneration: 2
   moves:
   - {fileID: 11400000, guid: bd7a2fa4082e2ae41bc2123425847457, type: 2}
   - {fileID: 11400000, guid: b5498487bd839714a9a1eebac4bb7fc1, type: 2}
   - {fileID: 11400000, guid: 22a74328dafb5574794ad57c6a851452, type: 2}
   - {fileID: 11400000, guid: b1aaee7d243e6b143a184057da9821bd, type: 2}
   - {fileID: 11400000, guid: 8306f602bde82d8449e7647b01b6cab9, type: 2}
-  chosenMove: {fileID: 0}
   chosenMoveNumber: 0
   hasMoveLanded: 0
   hasChosenMove: 0
+  isNPC: 0
+  isEnemy: 0
   AimPosition: {fileID: 4859197667234021163}
   HitPosition: {fileID: 1582390634563528154}
   idleLenght: 0

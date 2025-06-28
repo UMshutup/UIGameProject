@@ -16,6 +16,9 @@ MonoBehaviour:
   moveDescription: Deals ranged damage
   moveDamage: 2
   moveAccuracy: 100
+  moveApCost: 2
   moveCategory: 1
+  moveTarget: 0
+  hitsAWholeSquad: 0
   moveVisualEffectPrefab: {fileID: 780169709837173935, guid: 2859c653222ac3f40aa5271fc1610ebd, type: 3}
   moveMissEffectPrefab: {fileID: 3062664297577719860, guid: 347ca88f1f177c44ab79e2aaa04be71d, type: 3}

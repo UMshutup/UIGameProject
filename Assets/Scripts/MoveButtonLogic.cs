@@ -9,14 +9,32 @@ public class MoveButtonLogic : MonoBehaviour
     [SerializeField] private Button button;
     [SerializeField] private int currentPlayerNumber;
 
+    public Image[] actionPointsCost;
+
+    public Sprite emptyActionPointsSprite;
+    public Sprite fullActionPointsSprite;
+
     private void Awake()
     {
         battleUIManager = FindAnyObjectByType<BattleUIManager>();
     }
 
-    public void SetMoveToButton(int _moveNumber)
+    public void SetMoveToButton(int _moveNumber, int _moveCost)
     {
-        button.GetComponentInChildren<TextMeshProUGUI>().text = battleManager.currentPlayerFighters[currentPlayerNumber].moves[_moveNumber].GetMoveName();
+        button.GetComponentInChildren<TextMeshProUGUI>().text = battleManager.currentPlayerFighters[currentPlayerNumber].currentMoves[_moveNumber].GetMoveName();
+
+        for (int i = 0; i < actionPointsCost.Length; i++)
+        {
+            if (i + 1 <= _moveCost)
+            {
+                actionPointsCost[i].sprite = fullActionPointsSprite;
+            }
+            else
+            {
+                actionPointsCost[i].sprite = emptyActionPointsSprite;
+            }
+        }
+
         int moveNumber = _moveNumber;
 
         if (currentPlayerNumber == 0)
