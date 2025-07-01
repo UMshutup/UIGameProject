@@ -1,6 +1,7 @@
 using DG.Tweening;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BattleManager : MonoBehaviour
@@ -34,14 +35,16 @@ public class BattleManager : MonoBehaviour
 
     private List<Fighter> fighters;
 
+    private List<Fighter> allFighters;
 
     public BattleState state;
+
+    private int fighterToSwapNumber;
+    private int fighterToSwapWithNumber;
 
     // booleans
 
     public bool hasRandomized;
-
-    public bool isPlayer1Choosing;
 
     public bool hasEveryoneChosenAMove;
 
@@ -50,6 +53,8 @@ public class BattleManager : MonoBehaviour
     private bool hasAddedAP = false;
 
     private bool hasAppendedAnimation;
+
+    private bool hasAppendedSwapAnimation;
 
     private void Start()
     {
@@ -119,7 +124,6 @@ public class BattleManager : MonoBehaviour
         foreach (Fighter fighter in currentEnemyFighters)
         {
             fighter.targets = new List<Fighter> { currentPlayerFighters[0] };
-            fighter.isEnemy = true;
             fighter.ResetAP();
         }
 
@@ -132,6 +136,45 @@ public class BattleManager : MonoBehaviour
         foreach (Fighter fighter in currentEnemyFighters)
         {
             fighters.Add(fighter);
+        }
+
+        allFighters = new List<Fighter>();
+
+        foreach (Fighter fighter in currentPlayerFighters)
+        {
+            allFighters.Add(fighter);
+        }
+        foreach (Fighter fighter in currentEnemyFighters)
+        {
+            allFighters.Add(fighter);
+        }
+        foreach (GameObject backup in currentPlayerBackups)
+        {
+            allFighters.Add(backup.GetComponent<Fighter>());
+        }
+        foreach (GameObject backup in currentEnemyBackups)
+        {
+            allFighters.Add(backup.GetComponent<Fighter>());
+        }
+
+        RandomizeFighterID();
+    }
+
+    public void RandomizeFighterID()
+    {
+        List<int> list = new List<int>(allFighters.Count);
+
+        for (int i = 0; i < allFighters.Count; i++)
+        {
+            int Rand = Random.Range(1, 101);
+
+            while (list.Contains(Rand))
+            {
+                Rand = Random.Range(1, 101);
+            }
+
+            list.Add(Rand);
+            allFighters[i].id = list[i];
         }
     }
 
@@ -147,6 +190,7 @@ public class BattleManager : MonoBehaviour
     {
 
         currentPlayerFighters[1].ChooseMove(_moveNumber);
+        MoveSelectionEnemies();
     }
 
     public void MoveSelectionEnemies()
@@ -230,22 +274,57 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    public void SwapPlayer(int _fighterNumber)
+    public void SetSwapNumbers(int _fighterNumber)
+    {
+        if (state == BattleState.DECISIONTURNPLAYER1)
+        {
+            fighterToSwapWithNumber = _fighterNumber;
+            currentPlayerFighters[0].isBeingSwapped = true;
+            currentPlayerFighters[0].ChooseMoveNothing();
+            currentPlayerFighters[0].ChooseTargetNone();
+        }
+        else if(state == BattleState.DECISIONTURNPLAYER2)
+        {
+            fighterToSwapWithNumber = _fighterNumber;
+            currentPlayerFighters[1].isBeingSwapped = true;
+            currentPlayerFighters[1].ChooseMoveNothing();
+            currentPlayerFighters[1].ChooseTargetNone();
+        }
+
+        MoveSelectionEnemies();
+    }
+
+    public void SwapPlayer(int _fighterToSwapNumber)
     {
         var sequence = DOTween.Sequence();
 
-        if (state == BattleState.DECISIONTURNPLAYER1)
+        if (!hasAppendedSwapAnimation)
         {
-            sequence.Append(currentPlayerFighters[0].transform.DOMove(backupPlayerPosition.position, 0.5f)).
-                Append(currentPlayerBackups[_fighterNumber].transform.DOMove(playerPositions[0].position, 0.5f)).
-                AppendCallback(() => Swap(0, _fighterNumber));
+            sequence.Append(currentPlayerFighters[_fighterToSwapNumber].transform.DOMove(backupPlayerPosition.position, 0.5f)).
+                Append(currentPlayerBackups[fighterToSwapWithNumber].transform.DOMove(playerPositions[_fighterToSwapNumber].position, 0.5f)).
+                AppendCallback(() => Swap(_fighterToSwapNumber, fighterToSwapWithNumber)).
+                AppendCallback(() => hasAppendedSwapAnimation = false);
+            hasAppendedSwapAnimation = true;
         }
     }
 
     private void Swap(int _playerNumber, int _backupNumber)
     {
+        
         currentPlayers[_playerNumber].GetComponent<SelectableFighter>().isBackup = true;
         currentPlayerBackups[_backupNumber].GetComponent<SelectableFighter>().isBackup = false;
+
+        currentPlayerBackups[_backupNumber].GetComponent<Fighter>().ChooseMoveNothing();
+        currentPlayerBackups[_backupNumber].GetComponent<Fighter>().ChooseTargetNone();
+
+        for (int i = 0; i < fighters.Count; i++)
+        {
+            if (fighters[i].EqualsId(currentPlayerFighters[_playerNumber]))
+            {
+                fighters[i] = currentPlayerBackups[_backupNumber].GetComponent<Fighter>();
+                break;
+            }
+        }
 
         GameObject temp = currentPlayers[_playerNumber];
         currentPlayers[_playerNumber] = currentPlayerBackups[_backupNumber];
@@ -254,16 +333,7 @@ public class BattleManager : MonoBehaviour
 
         currentPlayerBackups[_backupNumber] = temp;
 
-        fighters = new List<Fighter>();
-
-        foreach (Fighter fighter in currentPlayerFighters)
-        {
-            fighters.Add(fighter);
-        }
-        foreach (Fighter fighter in currentEnemyFighters)
-        {
-            fighters.Add(fighter);
-        }
+        currentPlayerFighters[_playerNumber].hasFinishedAnimation = true;
 
         playerTeam.RebuildTeam();
     }
@@ -391,19 +461,53 @@ public class BattleManager : MonoBehaviour
         {
             if (i != 0)
             {
-                if (fighters[i - 1].hasFinishedAnimation && !fighters[i].hasAppendedAnimation)
+                if (!fighters[i].isBeingSwapped)
                 {
-                    Debug.Log("Turn: " + i + "Attacker: " + fighters[i].fighterName);
-                    fighters[i].UseMove();
+                    if (fighters[i - 1].hasFinishedAnimation && !fighters[i].hasAppendedAnimation)
+                    {
+                        Debug.Log("Turn: " + i + "Attacker: " + fighters[i].fighterName);
+                        fighters[i].UseMove();
+                    }
+                }
+                else
+                {
+                    if (fighters[i - 1].hasFinishedAnimation && !fighters[i].hasFinishedAnimation)
+                    {
+                        if (fighters[i].EqualsId(currentPlayerFighters[0]))
+                        {
+                            SwapPlayer(0);
+                        }
+                        else if (fighters[i].EqualsId(currentPlayerFighters[1]))
+                        {
+                            SwapPlayer(1);
+                        }
+                    }
                 }
                 
             }
             else
             {
-                if (!fighters[i].hasAppendedAnimation)
+                if (!fighters[i].isBeingSwapped)
                 {
-                    Debug.Log("Turn: " + i + "Attacker: " + fighters[i].fighterName);
-                    fighters[i].UseMove();
+                    if (!fighters[i].hasAppendedAnimation)
+                    {
+                        Debug.Log("Turn: " + i + "Attacker: " + fighters[i].fighterName);
+                        fighters[i].UseMove();
+                    }
+                }
+                else
+                {
+                    if (!fighters[i].hasFinishedAnimation)
+                    {
+                        if (fighters[i].EqualsId(currentPlayerFighters[0]))
+                        {
+                            SwapPlayer(0);
+                        }
+                        else if (fighters[i].EqualsId(currentPlayerFighters[1]))
+                        {
+                            SwapPlayer(1);
+                        }
+                    }
                 }
             }
         }
@@ -412,6 +516,8 @@ public class BattleManager : MonoBehaviour
         {
             state = BattleState.DECISIONTURNPLAYER1;
             hasRandomized = false;
+            currentPlayerFighters[0].isBeingSwapped = false;
+            currentPlayerFighters[1].isBeingSwapped = false;
 
             foreach (Fighter currentFighter in fighters)
             {

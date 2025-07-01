@@ -42,9 +42,8 @@ public class Fighter : MonoBehaviour
     [HideInInspector] public bool hasMoveLanded;
     [HideInInspector] public bool hasChosenMove;
 
-    [Header("NPC variables")]
-    public bool isNPC;
-    public bool isEnemy;
+    [Header("ID")]
+    public int id;
 
     [Header("Positions")]
     public GameObject AimPosition;
@@ -69,7 +68,7 @@ public class Fighter : MonoBehaviour
     private Transform originalTransform;
     public bool hasFinishedAnimation = false;
 
-    [HideInInspector] public bool isBeingSwapped = false;
+    public bool isBeingSwapped = false;
 
     [HideInInspector] public bool hasAppendedAnimation;
 
@@ -500,7 +499,6 @@ public class Fighter : MonoBehaviour
     {
         hasFinishedAnimation = false;
         hasAppendedAnimation = false;
-
     }
 
     public void SwapPosition(Fighter _swap)
@@ -516,5 +514,9 @@ public class Fighter : MonoBehaviour
                 AppendCallback(() => originalTransform.position = transform.position);
     }
 
+    public bool EqualsId(Fighter _fighter)
+    {
+        return id == _fighter.id;
+    }
     
 }

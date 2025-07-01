@@ -972,7 +972,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 949798539}
         m_TargetAssemblyTypeName: BattleManager, Assembly-CSharp
-        m_MethodName: SwapPlayer
+        m_MethodName: SetSwapNumbers
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3122,7 +3122,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 949798539}
         m_TargetAssemblyTypeName: BattleManager, Assembly-CSharp
-        m_MethodName: SwapPlayer
+        m_MethodName: SetSwapNumbers
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -14471,7 +14471,6 @@ MonoBehaviour:
   currentEnemyFighters: []
   state: 0
   hasRandomized: 0
-  isPlayer1Choosing: 0
   hasEveryoneChosenAMove: 0
   hasEveryoneChosenATarget: 0
 --- !u!114 &949798540
@@ -22518,7 +22517,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 949798539}
         m_TargetAssemblyTypeName: BattleManager, Assembly-CSharp
-        m_MethodName: SwapPlayer
+        m_MethodName: SetSwapNumbers
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -27230,7 +27229,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 949798539}
         m_TargetAssemblyTypeName: BattleManager, Assembly-CSharp
-        m_MethodName: SwapPlayer
+        m_MethodName: SetSwapNumbers
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
