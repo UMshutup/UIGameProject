@@ -17,13 +17,21 @@ public class SelectableTeam : MonoBehaviour
 
     private void Start()
     {
+        RebuildTeam();
+    }
+
+    public void RebuildTeam()
+    {
         selectableFighters = gameObject.GetComponentsInChildren<SelectableFighter>().ToList();
 
         fighters = new List<Fighter>();
 
         for (int i = 0; i < selectableFighters.Count; i++)
         {
-            fighters.Add(selectableFighters[i].gameObject.GetComponent<Fighter>());
+            if (!selectableFighters[i].isBackup)
+            {
+                fighters.Add(selectableFighters[i].gameObject.GetComponent<Fighter>());
+            }
         }
     }
 

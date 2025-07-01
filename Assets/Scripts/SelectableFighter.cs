@@ -6,6 +6,8 @@ public class SelectableFighter : MonoBehaviour
 {
     public SpriteRenderer spriteRenderer;
 
+    public bool isBackup = true;
+
     [HideInInspector] public bool canSelect = false;
     [HideInInspector] public bool hasSelectedTarget;
     private bool hasAppended = false;

@@ -19,6 +19,11 @@ public class BattleUIManager : MonoBehaviour
     [SerializeField] private GameObject playerStats;
     [SerializeField] private GameObject enemyStats;
 
+    [Header("TeamUI")]
+    [SerializeField] private GameObject teamBackgroundUI;
+    [SerializeField] private List<FighterStatsUI> mainPlayersUI;
+    [SerializeField] private List<FighterStatsUI> backupPlayersUI;
+
     private List<FighterStatsUI> playerUI;
     private List<FighterStatsUI> enemyUI;
 
@@ -26,6 +31,8 @@ public class BattleUIManager : MonoBehaviour
 
     private bool isMoveList1OnScreen;
     private bool isMoveList2OnScreen;
+
+    private bool isTeamBackgroundUIOnscreen;
 
     private bool hasAppendedAnimation1 = false;
     private bool hasAppendedAnimation2 = false;
@@ -62,15 +69,31 @@ public class BattleUIManager : MonoBehaviour
     {
         MenuAnimations();
 
-        for (int i = 0; i < playerUI.Count; i++)
+        for (int i = 0; i < battleManager.currentPlayerFighters.Count; i++)
         {
             playerUI[i].UpdateStats(battleManager.currentPlayerFighters[i]);
         }
 
-        for (int i = 0; i < enemyUI.Count; i++)
+        for (int i = 0; i < battleManager.currentEnemyFighters.Count; i++)
         {
             enemyUI[i].UpdateStats(battleManager.currentEnemyFighters[i]);
         }
+
+        for (int i = battleManager.currentEnemyFighters.Count; i < enemyUI.Count; i++)
+        {
+            enemyUI[i].gameObject.SetActive(false);
+        }
+
+
+
+        mainPlayersUI[0].UpdateStats(battleManager.currentPlayerFighters[0]);
+        mainPlayersUI[1].UpdateStats(battleManager.currentPlayerFighters[1]);
+
+        for (int i = 0; i< backupPlayersUI.Count; i++)
+        {
+            backupPlayersUI[i].UpdateStats(battleManager.currentPlayerBackups[i].GetComponent<Fighter>());
+        }
+
     }
 
     private void MenuAnimations()
@@ -169,6 +192,20 @@ public class BattleUIManager : MonoBehaviour
         {
             moveListPlayer2.transform.DOLocalMoveY(-498, 0.5f);
             isMoveList2OnScreen = false;
+        }
+    }
+
+    public void ShowHideTeamBackground()
+    {
+        if (!isTeamBackgroundUIOnscreen)
+        {
+            teamBackgroundUI.transform.DOLocalMoveX(0, 0.5f);
+            isTeamBackgroundUIOnscreen = true;
+        }
+        else
+        {
+            teamBackgroundUI.transform.DOLocalMoveX(1923, 0.5f);
+            isTeamBackgroundUIOnscreen = false;
         }
     }
 }

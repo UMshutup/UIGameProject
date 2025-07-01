@@ -404,6 +404,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 6620fecded06f3d40aebddd1c0e7cf54, type: 2}
   - {fileID: 11400000, guid: 8306f602bde82d8449e7647b01b6cab9, type: 2}
   - {fileID: 11400000, guid: 56cd7199d68cb27408c24db4b13b0d2f, type: 2}
+  - {fileID: 11400000, guid: c24f9715272f59146a7d73f1d87ba945, type: 2}
+  defaultMove: {fileID: 11400000, guid: d079afda5cdbc12408cde4fcd6c90619, type: 2}
   chosenMoveNumber: 0
   hasMoveLanded: 0
   hasChosenMove: 0
@@ -421,7 +423,6 @@ MonoBehaviour:
   hasChosenTarget: 0
   hasFinishedAnimation: 0
   hasAppendedAnimation: 0
-  hasAppendedKnockout: 0
 --- !u!114 &6551776854334475821
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -435,6 +436,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 7045812003053770018}
+  isBackup: 1
   canSelect: 0
   hasSelectedTarget: 0
   isOnSprite: 0

@@ -36,6 +36,11 @@ public class MoveListUI : MonoBehaviour
             }
         }
 
+        for(int i = battleManager.currentPlayerFighters[currentPlayerNumber].currentMoves.Count; i < 8; i++)
+        {
+            buttons[i].gameObject.SetActive(false);
+        }
+
         choiceList.sizeDelta = new Vector2(choiceList.rect.width, choiceList.childCount * 125);
         
         if (!hasScrolled)

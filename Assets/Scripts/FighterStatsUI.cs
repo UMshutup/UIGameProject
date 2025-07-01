@@ -7,6 +7,7 @@ public class FighterStatsUI : MonoBehaviour
     public TextMeshProUGUI fighterName;
     public Image healthBar;
     public Image[] actionPoints;
+    public Image spriteImage;
 
     public Sprite emptyActionPointsSprite;
     public Sprite fullActionPointsSprite;
@@ -16,6 +17,13 @@ public class FighterStatsUI : MonoBehaviour
 
     public void UpdateStats(Fighter _fighter)
     {
+
+        if (spriteImage != null)
+        {
+            spriteImage.sprite = _fighter.GetComponent<SpriteRenderer>().sprite;
+            spriteImage.SetNativeSize();
+        }
+
         fighterName.text = _fighter.fighterName;
         healthBar.fillAmount = _fighter.currentHP / _fighter.maxHP;
 

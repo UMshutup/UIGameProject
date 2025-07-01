@@ -30,6 +30,9 @@ public class Fighter : MonoBehaviour
 
     [Header("Moves")]
     [SerializeField] private List<Move> moves;
+    [SerializeField] private Move defaultMove;
+
+    [SerializeField] private MoveInstance defaultMoveInstance;
 
     [HideInInspector] public List<MoveInstance> currentMoves;
 
@@ -64,10 +67,11 @@ public class Fighter : MonoBehaviour
     [HideInInspector] public bool hasChosenTarget;
 
     private Transform originalTransform;
-    [HideInInspector] public bool hasFinishedAnimation = false;
+    public bool hasFinishedAnimation = false;
+
+    [HideInInspector] public bool isBeingSwapped = false;
 
     [HideInInspector] public bool hasAppendedAnimation;
-    [HideInInspector] public bool hasAppendedKnockout;
 
 
     private void Start()
@@ -85,7 +89,7 @@ public class Fighter : MonoBehaviour
 
         MoveSetup();
 
-        chosenMove = currentMoves[0];
+        chosenMove = defaultMoveInstance;
 
         fighterState = FighterState.NORMAL;
     }
@@ -98,6 +102,8 @@ public class Fighter : MonoBehaviour
         {
             currentMoves.Add(new MoveInstance(moves[i]));
         }
+
+        defaultMoveInstance = new MoveInstance(defaultMove);
     }
 
     public void UpdateAnimClipTimes()
@@ -142,6 +148,13 @@ public class Fighter : MonoBehaviour
         }
     }
 
+    public void ChooseMoveNothing()
+    {
+        chosenMove = defaultMoveInstance;
+        chosenMoveNumber = 0;
+        hasChosenMove = true;
+    }
+
     public void ChooseMoveRandom()
     {
         List<MoveInstance> usableMoves = new List<MoveInstance>();
@@ -177,43 +190,52 @@ public class Fighter : MonoBehaviour
         hasChosenTarget = true;
     }
 
+    public void ChooseTargetNone()
+    {
+        targets = null;
+        hasChosenTarget = true;
+    }
+
     public void ChooseTargetAI(List<Fighter> _currentTeam, List<Fighter> _opposingTeam)
     {
-        if (chosenMove.GetMoveTarget() == MoveTarget.BOTH || chosenMove.GetMoveTarget() == MoveTarget.ENEMY)
+        if (chosenMove != null)
         {
-            if (chosenMove.GetHitsAWholeSquad())
+            if (chosenMove.GetMoveTarget() == MoveTarget.BOTH || chosenMove.GetMoveTarget() == MoveTarget.ENEMY)
             {
-                targets = _opposingTeam;
+                if (chosenMove.GetHitsAWholeSquad())
+                {
+                    targets = _opposingTeam;
+                    hasChosenTarget = true;
+                    return;
+                }
+                else
+                {
+                    targets = new List<Fighter> { _opposingTeam[Random.Range(0, _opposingTeam.Count)] };
+                    hasChosenTarget = true;
+                    return;
+                }
+            }
+            else if (chosenMove.GetMoveTarget() == MoveTarget.PLAYER)
+            {
+                if (chosenMove.GetHitsAWholeSquad())
+                {
+                    targets = _currentTeam;
+                    hasChosenTarget = true;
+                    return;
+                }
+                else
+                {
+                    targets = new List<Fighter> { _currentTeam[Random.Range(0, _currentTeam.Count)] };
+                    hasChosenTarget = true;
+                    return;
+                }
+            }
+            else if (chosenMove.GetMoveTarget() == MoveTarget.SELF)
+            {
+                targets = new List<Fighter> { this };
                 hasChosenTarget = true;
                 return;
             }
-            else
-            {
-                targets = new List<Fighter> { _opposingTeam[Random.Range(0, _opposingTeam.Count)] };
-                hasChosenTarget = true;
-                return;
-            }
-        }
-        else if(chosenMove.GetMoveTarget() == MoveTarget.PLAYER)
-        {
-            if (chosenMove.GetHitsAWholeSquad())
-            {
-                targets = _currentTeam;
-                hasChosenTarget = true;
-                return;
-            }
-            else
-            {
-                targets = new List<Fighter> { _currentTeam[Random.Range(0, _currentTeam.Count)] };
-                hasChosenTarget = true;
-                return;
-            }
-        }
-        else if (chosenMove.GetMoveTarget() == MoveTarget.SELF)
-        {
-            targets = new List<Fighter> { this };
-            hasChosenTarget = true;
-            return;
         }
     }
 
@@ -281,7 +303,19 @@ public class Fighter : MonoBehaviour
 
         if (fighterState == FighterState.NORMAL)
         {
-            if (chosenMove.GetMoveCategory() == MoveCategory.MELEE)
+
+            if (chosenMove.Equals(defaultMoveInstance) || targets == null)
+            {
+                if (!hasAppendedAnimation)
+                {
+                    sequence.Append(transform.DOMoveX(originalTransform.position.x + 0.1f, 0.1f)).
+                        Append(transform.DOMoveX(originalTransform.position.x - 0.1f, 0.1f)).
+                        Append(transform.DOMoveX(originalTransform.position.x, 0.1f));
+
+                    hasAppendedAnimation = true;
+                }
+            }
+            else if (chosenMove.GetMoveCategory() == MoveCategory.MELEE)
             {
                 if (!hasAppendedAnimation)
                 {
@@ -319,7 +353,7 @@ public class Fighter : MonoBehaviour
             }
             else
             {
-                Debug.Log("Error: no animation for move category");
+
             }
         }
         else
@@ -467,6 +501,19 @@ public class Fighter : MonoBehaviour
         hasFinishedAnimation = false;
         hasAppendedAnimation = false;
 
+    }
+
+    public void SwapPosition(Fighter _swap)
+    {
+        var sequence = DOTween.Sequence();
+
+        Vector3 temp1 = transform.position;
+        Vector3 temp2 = _swap.gameObject.transform.position;
+
+        sequence.Append(transform.DOMove(temp2, 0.5f)).
+                Join(_swap.gameObject.transform.DOMove(temp1, 0.5f)).
+                AppendCallback(() => _swap.originalTransform.position = _swap.transform.position).
+                AppendCallback(() => originalTransform.position = transform.position);
     }
 
     
