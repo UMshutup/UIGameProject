@@ -166,6 +166,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1428372761211689014}
   m_SourcePrefab: {fileID: -8435245712485981826, guid: b5bd80514cfafd946bd0ce694115e85c, type: 3}
+--- !u!212 &2144280141655011007 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 3626916397498700004, guid: b5bd80514cfafd946bd0ce694115e85c, type: 3}
+  m_PrefabInstance: {fileID: 3429322146872458843}
+  m_PrefabAsset: {fileID: 0}
 --- !u!95 &4579333498226815891 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 1160356261127867848, guid: b5bd80514cfafd946bd0ce694115e85c, type: 3}
@@ -225,6 +230,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 4579333498226815891}
   parentAnimator: {fileID: 2427956538533899810}
+  spriteRenderer: {fileID: 2144280141655011007}
+  parentSpriteRenderer: {fileID: 287906551907758862}
 --- !u!1001 &3579161331335111658
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -410,6 +417,7 @@ MonoBehaviour:
   maxActionPoints: 10
   currentHP: 0
   previousHP: 0
+  minHP: 0
   currentActionPoints: 0
   actionPointRegeneration: 2
   fighterState: 0
@@ -423,8 +431,7 @@ MonoBehaviour:
   chosenMoveNumber: 0
   hasMoveLanded: 0
   hasChosenMove: 0
-  isNPC: 0
-  isEnemy: 0
+  id: 0
   AimPosition: {fileID: 4859197667234021163}
   HitPosition: {fileID: 1582390634563528154}
   idleLenght: 0
@@ -436,7 +443,9 @@ MonoBehaviour:
   targets: []
   hasChosenTarget: 0
   hasFinishedAnimation: 0
+  isBeingSwapped: 0
   hasAppendedAnimation: 0
+  hasAppendedDeathAnimation: 0
 --- !u!114 &5984510565980588071
 MonoBehaviour:
   m_ObjectHideFlags: 0

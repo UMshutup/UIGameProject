@@ -4,10 +4,14 @@ public class CopyAnimations : MonoBehaviour
 {
     public Animator animator;
     public Animator parentAnimator;
+    public SpriteRenderer spriteRenderer;
+    public SpriteRenderer parentSpriteRenderer;
 
 
     void Update()
     {
+        spriteRenderer.color = parentSpriteRenderer.material.color;
+
         if (parentAnimator.GetBool("idle"))
         {
             animator.SetTrigger("idle");

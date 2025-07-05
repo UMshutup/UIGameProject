@@ -203,7 +203,24 @@ public class BattleManager : MonoBehaviour
 
     private void Update()
     {
-        
+
+        for (int i = 0; i< currentPlayerFighters.Count; i++)
+        {
+            if (currentPlayerFighters[i].fighterState == FighterState.DEAD)
+            {
+                playerTeam.RebuildTeam();
+            }
+
+        }
+
+        for (int i = 0; i < currentEnemyFighters.Count; i++)
+        {
+            if (currentEnemyFighters[i].fighterState == FighterState.DEAD)
+            {
+                enemyTeam.RebuildTeam();
+            }
+
+        }
 
         if (state == BattleState.DECISIONTURNPLAYER1)
         {

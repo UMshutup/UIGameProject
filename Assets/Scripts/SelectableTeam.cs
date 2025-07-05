@@ -28,7 +28,7 @@ public class SelectableTeam : MonoBehaviour
 
         for (int i = 0; i < selectableFighters.Count; i++)
         {
-            if (!selectableFighters[i].isBackup)
+            if (!selectableFighters[i].isBackup && selectableFighters[i].gameObject.GetComponent<Fighter>().fighterState != FighterState.DEAD)
             {
                 fighters.Add(selectableFighters[i].gameObject.GetComponent<Fighter>());
             }

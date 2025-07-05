@@ -22,6 +22,8 @@ public class Fighter : MonoBehaviour
     [HideInInspector] public float currentHP;
     [HideInInspector] public float previousHP;
 
+    [HideInInspector] public float minHP;
+
     [HideInInspector] public int currentActionPoints;
     [HideInInspector] public int actionPointRegeneration = 2;
 
@@ -71,6 +73,7 @@ public class Fighter : MonoBehaviour
     public bool isBeingSwapped = false;
 
     [HideInInspector] public bool hasAppendedAnimation;
+    [HideInInspector] public bool hasAppendedDeathAnimation;
 
 
     private void Start()
@@ -79,6 +82,7 @@ public class Fighter : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         UpdateAnimClipTimes();
 
+        minHP = -(int)(maxHP / 3);
         currentHP = maxHP;
         previousHP = currentHP;
 
@@ -209,7 +213,14 @@ public class Fighter : MonoBehaviour
                 }
                 else
                 {
-                    targets = new List<Fighter> { _opposingTeam[Random.Range(0, _opposingTeam.Count)] };
+                    Fighter randomFighter = _opposingTeam[Random.Range(0, _opposingTeam.Count)];
+
+                    while (randomFighter.fighterState == FighterState.DEAD)
+                    {
+                        randomFighter = _opposingTeam[Random.Range(0, _opposingTeam.Count)];
+                    }
+
+                    targets = new List<Fighter> { randomFighter };
                     hasChosenTarget = true;
                     return;
                 }
@@ -252,13 +263,16 @@ public class Fighter : MonoBehaviour
 
     public void RegenerateAP()
     {
-        if (currentActionPoints + actionPointRegeneration <= maxActionPoints)
+        if (fighterState == FighterState.NORMAL)
         {
-            currentActionPoints += actionPointRegeneration;
-        }
-        else
-        {
-            currentActionPoints = maxActionPoints;
+            if (currentActionPoints + actionPointRegeneration <= maxActionPoints)
+            {
+                currentActionPoints += actionPointRegeneration;
+            }
+            else
+            {
+                currentActionPoints = maxActionPoints;
+            }
         }
     }
 
@@ -270,6 +284,7 @@ public class Fighter : MonoBehaviour
     private void Update()
     {
         KnockoutAnimation();
+        DeathAnimation();
 
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("alt_idle"))
         {
@@ -290,7 +305,7 @@ public class Fighter : MonoBehaviour
             animator.SetTrigger("hurt");
             previousHP = currentHP;
         }
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("hurt"))
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("hurt") && currentHP > 0)
         {
             animator.SetTrigger("idle");
         }
@@ -376,10 +391,39 @@ public class Fighter : MonoBehaviour
     {
         if (currentHP <= 0)
         {
-            animator.SetTrigger("sleep_idle");
-            fighterState = FighterState.KNOCKOUT;
+            if (animator.GetCurrentAnimatorStateInfo(0).IsName("hurt"))
+            {
+                animator.SetTrigger("knockout");
+            }
+
+            if (animator.GetCurrentAnimatorStateInfo(0).IsName("knockout"))
+            {
+                animator.SetTrigger("knockout_idle");
+            }
+            if (currentHP > minHP)
+            {
+                fighterState = FighterState.KNOCKOUT;
+            }
         }
 
+    }
+
+    public void DeathAnimation()
+    {
+
+        var sequence = DOTween.Sequence();
+
+        if (currentHP <= minHP)
+        {
+            if (!hasAppendedDeathAnimation)
+            {
+                sequence.Append(transform.DOLocalMoveX(originalTransform.position.x - 1, 0.5f)).
+                    Join(GetComponent<SpriteRenderer>().DOFade(0, 0.5f)).
+                    AppendCallback(() => GetComponent<SpriteRenderer>().material.color = new Color(1,1,1,0));
+                fighterState = FighterState.DEAD;
+                hasAppendedDeathAnimation = true;
+            }
+        }
     }
 
     private Vector3 GetTargetLocalPosition()

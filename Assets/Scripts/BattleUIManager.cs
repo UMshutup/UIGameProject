@@ -89,8 +89,13 @@ public class BattleUIManager : MonoBehaviour
         mainPlayersUI[0].UpdateStats(battleManager.currentPlayerFighters[0]);
         mainPlayersUI[1].UpdateStats(battleManager.currentPlayerFighters[1]);
 
-        for (int i = 0; i< backupPlayersUI.Count; i++)
+        for (int i = 0; i < battleManager.currentPlayerBackups.Count; i++)
         {
+            if (battleManager.currentPlayerBackups[i].GetComponent<Fighter>().fighterState == FighterState.DEAD)
+            {
+                backupPlayersUI[i].GetComponent<Button>().interactable = false;
+            }
+            backupPlayersUI[i].gameObject.SetActive(true) ;
             backupPlayersUI[i].UpdateStats(battleManager.currentPlayerBackups[i].GetComponent<Fighter>());
         }
 

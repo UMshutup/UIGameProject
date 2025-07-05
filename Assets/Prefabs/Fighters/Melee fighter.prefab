@@ -105,6 +105,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8887167167743352545, guid: 472847d39a5b86048ab212187ff2e8e7, type: 3}
     - target: {fileID: 3626916397498700004, guid: b5bd80514cfafd946bd0ce694115e85c, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3626916397498700004, guid: b5bd80514cfafd946bd0ce694115e85c, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3626916397498700004, guid: b5bd80514cfafd946bd0ce694115e85c, type: 3}
       propertyPath: m_CastShadows
       value: 3
       objectReference: {fileID: 0}
@@ -171,6 +179,11 @@ Animator:
   m_CorrespondingSourceObject: {fileID: 1160356261127867848, guid: b5bd80514cfafd946bd0ce694115e85c, type: 3}
   m_PrefabInstance: {fileID: 1701040555101229864}
   m_PrefabAsset: {fileID: 0}
+--- !u!212 &2724161416908276684 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 3626916397498700004, guid: b5bd80514cfafd946bd0ce694115e85c, type: 3}
+  m_PrefabInstance: {fileID: 1701040555101229864}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &8584758156388222016 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -2253911629886400664, guid: b5bd80514cfafd946bd0ce694115e85c, type: 3}
@@ -220,6 +233,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 540755763442409184}
   parentAnimator: {fileID: 4866364040666564622}
+  spriteRenderer: {fileID: 2724161416908276684}
+  parentSpriteRenderer: {fileID: 7045812003053770018}
 --- !u!4 &8849232972095679525 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7878350319992209165, guid: b5bd80514cfafd946bd0ce694115e85c, type: 3}
@@ -267,6 +282,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3626916397498700004, guid: b5bd80514cfafd946bd0ce694115e85c, type: 3}
       propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3626916397498700004, guid: b5bd80514cfafd946bd0ce694115e85c, type: 3}
+      propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: b5bd80514cfafd946bd0ce694115e85c, type: 3}
@@ -395,6 +414,7 @@ MonoBehaviour:
   maxActionPoints: 10
   currentHP: 0
   previousHP: 0
+  minHP: 0
   currentActionPoints: 0
   actionPointRegeneration: 2
   fighterState: 0
@@ -409,8 +429,7 @@ MonoBehaviour:
   chosenMoveNumber: 0
   hasMoveLanded: 0
   hasChosenMove: 0
-  isNPC: 0
-  isEnemy: 0
+  id: 0
   AimPosition: {fileID: 4963505559432041450}
   HitPosition: {fileID: 3000719787711371628}
   idleLenght: 0
@@ -422,7 +441,9 @@ MonoBehaviour:
   targets: []
   hasChosenTarget: 0
   hasFinishedAnimation: 0
+  isBeingSwapped: 0
   hasAppendedAnimation: 0
+  hasAppendedDeathAnimation: 0
 --- !u!114 &6551776854334475821
 MonoBehaviour:
   m_ObjectHideFlags: 0
