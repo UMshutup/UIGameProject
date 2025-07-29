@@ -414,6 +414,8 @@ MonoBehaviour:
   meleeDefence: 2
   rangedDefence: 3
   speed: 5
+  accuracy: 100
+  evasion: 100
   maxActionPoints: 10
   currentHP: 0
   previousHP: 0
@@ -429,7 +431,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8306f602bde82d8449e7647b01b6cab9, type: 2}
   defaultMove: {fileID: 11400000, guid: d079afda5cdbc12408cde4fcd6c90619, type: 2}
   chosenMoveNumber: 0
-  hasMoveLanded: 0
+  isGoingToBeHit: 0
   hasChosenMove: 0
   id: 0
   AimPosition: {fileID: 4859197667234021163}

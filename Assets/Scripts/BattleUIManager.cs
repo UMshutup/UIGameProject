@@ -63,6 +63,11 @@ public class BattleUIManager : MonoBehaviour
             enemyUI.Add(enemyUITotal[i]);
             enemyUI[i].gameObject.SetActive(true);
         }
+
+        for (int i = 0; i < battleManager.currentPlayerBackups.Count; i++)
+        {
+            backupPlayersUI[i].gameObject.SetActive(true);
+        }
     }
 
     private void Update()
@@ -71,12 +76,12 @@ public class BattleUIManager : MonoBehaviour
 
         for (int i = 0; i < battleManager.currentPlayerFighters.Count; i++)
         {
-            playerUI[i].UpdateStats(battleManager.currentPlayerFighters[i]);
+            playerUI[i].UpdateStats(battleManager.currentPlayerFighters[i], battleManager.allStatusEffects);
         }
 
         for (int i = 0; i < battleManager.currentEnemyFighters.Count; i++)
         {
-            enemyUI[i].UpdateStats(battleManager.currentEnemyFighters[i]);
+            enemyUI[i].UpdateStats(battleManager.currentEnemyFighters[i], battleManager.allStatusEffects);
         }
 
         for (int i = battleManager.currentEnemyFighters.Count; i < enemyUI.Count; i++)
@@ -86,8 +91,10 @@ public class BattleUIManager : MonoBehaviour
 
 
 
-        mainPlayersUI[0].UpdateStats(battleManager.currentPlayerFighters[0]);
-        mainPlayersUI[1].UpdateStats(battleManager.currentPlayerFighters[1]);
+        mainPlayersUI[0].UpdateStats(battleManager.currentPlayerFighters[0], battleManager.allStatusEffects);
+        mainPlayersUI[1].UpdateStats(battleManager.currentPlayerFighters[1], battleManager.allStatusEffects);
+
+        
 
         for (int i = 0; i < battleManager.currentPlayerBackups.Count; i++)
         {
@@ -95,8 +102,7 @@ public class BattleUIManager : MonoBehaviour
             {
                 backupPlayersUI[i].GetComponent<Button>().interactable = false;
             }
-            backupPlayersUI[i].gameObject.SetActive(true) ;
-            backupPlayersUI[i].UpdateStats(battleManager.currentPlayerBackups[i].GetComponent<Fighter>());
+            backupPlayersUI[i].UpdateStats(battleManager.currentPlayerBackups[i].GetComponent<Fighter>(), battleManager.allStatusEffects);
         }
 
     }

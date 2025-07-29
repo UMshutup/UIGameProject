@@ -11,6 +11,7 @@ public class Move : ScriptableObject
     [SerializeField] private MoveCategory moveCategory;
     [SerializeField] private MoveTarget moveTarget;
     [SerializeField] private bool hitsAWholeSquad;
+    [SerializeField] private StatusEffectSO statusEffectOnHit;
 
     [Space]
     [SerializeField] private GameObject moveVisualEffectPrefab;
@@ -70,6 +71,11 @@ public class Move : ScriptableObject
     public GameObject GetMoveMissEffectPrefab()
     {
         return moveMissEffectPrefab;
+    }
+
+    public StatusEffectSO GetStatusEffectOnHit()
+    {
+        return statusEffectOnHit;
     }
 
     public void ShowMoveVisualEffect(Vector3 _position, Quaternion _rotation, bool _hasMoveLanded)

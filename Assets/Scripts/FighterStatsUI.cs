@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,10 +15,21 @@ public class FighterStatsUI : MonoBehaviour
     public Sprite emptyActionPointsSprite;
     public Sprite fullActionPointsSprite;
 
+    public GameObject statusEffectZone;
+
     [Range(0, 10)] public int testMaxPoints;
     [Range(0, 10)] public int testPoints;
 
-    public void UpdateStats(Fighter _fighter)
+    private bool hasMadeList = false;
+
+    private List<StatusEffectInstance> list;
+
+    private void Start()
+    {
+        list = new List<StatusEffectInstance>();
+    }
+
+    public void UpdateStats(Fighter _fighter, List<StatusEffectSO> _statusEffects)
     {
 
         if (spriteImage != null)
@@ -28,6 +41,19 @@ public class FighterStatsUI : MonoBehaviour
         fighterName.text = _fighter.fighterName;
         healthBar.fillAmount = _fighter.currentHP / _fighter.maxHP;
         vitalityBar.fillAmount = 1f - Mathf.Max( _fighter.currentHP / _fighter.minHP, 0);
+
+        //convert to SO to instance
+        if (!hasMadeList)
+        {
+            for (int i = 0; i < _statusEffects.Count; i++)
+            {
+                list.Add(new StatusEffectInstance(_statusEffects[i]));
+            }
+            hasMadeList = true;
+        }
+
+        UpdateStatusEffects(_fighter, list);
+
         if (testMaxPoints != 0)
         {
             for (int i = 0; i < actionPoints.Length; i++)
@@ -48,6 +74,27 @@ public class FighterStatsUI : MonoBehaviour
                 else
                 {
                     actionPoints[i].sprite = emptyActionPointsSprite;
+                }
+            }
+        }
+    }
+
+    public void UpdateStatusEffects(Fighter _fighter, List<StatusEffectInstance> _statusEffectInstances)
+    {
+        if (statusEffectZone != null)
+        {
+            List<Image> icons = statusEffectZone.GetComponentsInChildren<Image>(true).ToList();
+
+            for (int i = 0; i < _statusEffectInstances.Count; i++)
+            {
+                if (_fighter.statusEffectInstances.Contains(_statusEffectInstances[i]))
+                {
+                    icons[i].gameObject.SetActive(true);
+                    icons[i].GetComponentInChildren<TextMeshProUGUI>().text = _statusEffectInstances[i].statusEffectDuration.ToString();
+                }
+                else
+                {
+                    icons[i].gameObject.SetActive(false);
                 }
             }
         }

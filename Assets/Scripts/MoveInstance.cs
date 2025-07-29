@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class MoveInstance
 {
@@ -10,6 +12,8 @@ public class MoveInstance
     [HideInInspector] public MoveCategory moveCategory;
     [HideInInspector] public MoveTarget moveTarget;
     [HideInInspector] public bool hitsAWholeSquad;
+    [HideInInspector] public StatusEffectSO statusEffectOnHit;
+
     [HideInInspector] public GameObject moveVisualEffectPrefab;
     [HideInInspector] public GameObject moveMissEffectPrefab;
     [HideInInspector] public Move originalMove;
@@ -29,6 +33,7 @@ public class MoveInstance
         moveVisualEffectPrefab = move.GetMoveVisualEffectPrefab();
         moveMissEffectPrefab = move.GetMoveMissEffectPrefab();
         originalMove = move;
+        statusEffectOnHit = move.GetStatusEffectOnHit();
     }
 
     public string GetMoveName()
@@ -83,6 +88,28 @@ public class MoveInstance
     public GameObject GetMoveMissEffectPrefab()
     {
         return moveMissEffectPrefab;
+    }
+
+    public StatusEffectSO GetStatusEffectOnHit()
+    {
+        return statusEffectOnHit;
+    }
+
+    public void GiveStatusEffectToTargets(Fighter _target)
+    {
+        if (statusEffectOnHit != null)
+        {
+            StatusEffectInstance statusEffect = new StatusEffectInstance(statusEffectOnHit);
+
+            if (_target.statusEffectInstances.Contains(statusEffect))
+            {
+                _target.statusEffectInstances[_target.statusEffectInstances.IndexOf(statusEffect)].statusEffectDuration += statusEffectOnHit.statusEffectStartDuration;
+            }
+            else
+            {
+                _target.statusEffectInstances.Add(statusEffect);
+            }
+        }
     }
 
     public float CalculateDamage(Fighter user, Fighter target)

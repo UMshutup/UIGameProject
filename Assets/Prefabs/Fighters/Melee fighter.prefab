@@ -411,6 +411,8 @@ MonoBehaviour:
   meleeDefence: 3
   rangedDefence: 2
   speed: 4
+  accuracy: 100
+  evasion: 100
   maxActionPoints: 10
   currentHP: 0
   previousHP: 0

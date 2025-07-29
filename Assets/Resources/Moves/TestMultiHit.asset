@@ -15,7 +15,7 @@ MonoBehaviour:
   moveName: Test Multi Hit
   moveDescription: Deals melee damage
   moveDamage: 1
-  moveAccuracy: 100
+  moveAccuracy: 50
   moveApCost: 3
   moveCategory: 0
   moveTarget: 0

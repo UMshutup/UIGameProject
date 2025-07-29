@@ -17,6 +17,8 @@ public class Fighter : MonoBehaviour
     public float meleeDefence;
     public float rangedDefence;
     public float speed;
+    public float accuracy;
+    public float evasion;
     public int maxActionPoints;
 
     [HideInInspector] public float currentHP;
@@ -41,7 +43,7 @@ public class Fighter : MonoBehaviour
     [HideInInspector] public MoveInstance chosenMove;
     [HideInInspector] public int chosenMoveNumber;
 
-    [HideInInspector] public bool hasMoveLanded;
+    [HideInInspector] public bool isGoingToBeHit;
     [HideInInspector] public bool hasChosenMove;
 
     [Header("ID")]
@@ -50,6 +52,9 @@ public class Fighter : MonoBehaviour
     [Header("Positions")]
     public GameObject AimPosition;
     public GameObject HitPosition;
+
+    [Header("Positions")]
+    public List<StatusEffectInstance> statusEffectInstances;
 
     // useful
     private Animator animator;
@@ -87,6 +92,8 @@ public class Fighter : MonoBehaviour
         previousHP = currentHP;
 
         originalTransform = transform;
+
+        statusEffectInstances = new List<StatusEffectInstance>();
 
         InvokeRepeating("PlayAltIdleAnimation", 1, 1);
 
@@ -283,6 +290,8 @@ public class Fighter : MonoBehaviour
 
     private void Update()
     {
+        StatusEffectLogic();
+
         KnockoutAnimation();
         DeathAnimation();
 
@@ -308,6 +317,38 @@ public class Fighter : MonoBehaviour
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("hurt") && currentHP > 0)
         {
             animator.SetTrigger("idle");
+        }
+    }
+
+    public void StatusEffectLogic()
+    {
+        if (statusEffectInstances != null && statusEffectInstances.Count > 0)
+        {
+            for (int i = 0; i < statusEffectInstances.Count; i++)
+            {
+                if (!statusEffectInstances[i].hasAffectedStats)
+                {
+                    statusEffectInstances[i].ChangeStats(this);
+                }
+
+                if (!statusEffectInstances[i].hasRevertedStats && statusEffectInstances[i].statusEffectDuration <= 0)
+                {
+                    statusEffectInstances[i].RevertStatChange(this);
+                    statusEffectInstances.RemoveAt(i);
+                    break;
+                }
+            }
+        }
+    }
+
+    public void ReduceDurationOfStatusEffects()
+    {
+        if (statusEffectInstances != null && statusEffectInstances.Count > 0)
+        {
+            for (int i = 0; i < statusEffectInstances.Count; i++)
+            {
+                statusEffectInstances[i].ReduceDuration();
+            }
         }
     }
 
@@ -481,7 +522,7 @@ public class Fighter : MonoBehaviour
     {
         foreach (Fighter fighter in targets)
         {
-            chosenMove.ShowMoveVisualEffect(fighter.HitPosition.transform.position, fighter.HitPosition.transform.rotation, hasMoveLanded);
+            chosenMove.ShowMoveVisualEffect(fighter.HitPosition.transform.position, fighter.HitPosition.transform.rotation, fighter.isGoingToBeHit);
         }
     }
 
@@ -490,30 +531,35 @@ public class Fighter : MonoBehaviour
         foreach (Fighter fighter in targets)
         {
             AimPosition.GetComponent<AimToTarget>().Aim(fighter.HitPosition.transform.position);
-            chosenMove.ShowMoveVisualEffect(AimPosition.transform.position, AimPosition.transform.rotation, hasMoveLanded);
+            chosenMove.ShowMoveVisualEffect(AimPosition.transform.position, AimPosition.transform.rotation, fighter.isGoingToBeHit);
         }
     }
 
     private void CheckIfMoveLands()
     {
-        if (Random.Range(0, 100f) < chosenMove.GetMoveAccuracy())
+        for (int i = 0; i<targets.Count; i++)
         {
-            hasMoveLanded = true;
-        }
-        else
-        {
-            hasMoveLanded = false;
+            if (Random.Range(0, 100f) - (this.accuracy - 100) < chosenMove.GetMoveAccuracy() - (targets[i].evasion - 100))
+            {
+                targets[i].isGoingToBeHit = true;
+            }
+            else
+            {
+                targets[i].isGoingToBeHit = false;
+            }
         }
 
     }
 
     private void DealDamage()
     {
-        if (hasMoveLanded)
+        
+        foreach (Fighter target in targets)
         {
-            foreach (Fighter target in targets)
+            if (target.isGoingToBeHit)
             {
                 target.currentHP -= chosenMove.CalculateDamage(this, target);
+                chosenMove.GiveStatusEffectToTargets(target);
             }
         }
     }

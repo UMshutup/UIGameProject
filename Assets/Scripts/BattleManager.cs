@@ -42,8 +42,11 @@ public class BattleManager : MonoBehaviour
     private int fighterToSwapNumber;
     private int fighterToSwapWithNumber;
 
-    // booleans
+    [Space]
+    public List<StatusEffectSO> allStatusEffects;
 
+    // booleans
+    [Space]
     public bool hasRandomized;
 
     public bool hasEveryoneChosenAMove;
