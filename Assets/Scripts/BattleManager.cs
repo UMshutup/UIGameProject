@@ -10,7 +10,7 @@ public class BattleManager : MonoBehaviour
     [Range(1,3)] public int limitOfActiveEnemies;
     
     [Space]
-    public List<GameObject> playerPrefabs;
+    private List<GameObject> playerPrefabs;
     public List<GameObject> enemyPrefabs;
 
     [Space]
@@ -61,6 +61,9 @@ public class BattleManager : MonoBehaviour
 
     private void Start()
     {
+        playerPrefabs = new List<GameObject>();
+        playerPrefabs = ChosenCharacters.playerFighters;
+
         currentPlayers = new List<GameObject>();
         currentPlayerFighters = new List<Fighter>();
 

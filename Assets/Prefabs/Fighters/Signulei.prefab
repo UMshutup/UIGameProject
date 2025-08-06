@@ -408,6 +408,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fighterName: Signulei
+  fighterDescription: A living street sign shaped like a deer, has good defences
   maxHP: 9
   meleeDamage: 4
   rangedDamage: 2

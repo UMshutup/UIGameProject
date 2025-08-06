@@ -407,7 +407,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d76629e3a7362104eaa503906d7d58e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fighterName: Ranged
+  fighterName: Mugsquito
+  fighterDescription: A fly shaped like a mug, they're strong with ranged attacks
   maxHP: 10
   meleeDamage: 2
   rangedDamage: 5

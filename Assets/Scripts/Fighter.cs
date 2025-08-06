@@ -9,6 +9,7 @@ public class Fighter : MonoBehaviour
 {
     [Header("Basic info")]
     public string fighterName;
+    [TextArea] public string fighterDescription;
 
     [Header("Stats")]
     public float maxHP;

@@ -404,7 +404,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d76629e3a7362104eaa503906d7d58e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fighterName: Melee
+  fighterName: Claivetta
+  fighterDescription: An weird bird with no wings weilding a mace, strong with meele
+    attacks
   maxHP: 10
   meleeDamage: 5
   rangedDamage: 2
@@ -429,7 +431,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c24f9715272f59146a7d73f1d87ba945, type: 2}
   defaultMove: {fileID: 11400000, guid: d079afda5cdbc12408cde4fcd6c90619, type: 2}
   chosenMoveNumber: 0
-  hasMoveLanded: 0
+  isGoingToBeHit: 0
   hasChosenMove: 0
   id: 0
   AimPosition: {fileID: 4963505559432041450}
