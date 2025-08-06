@@ -16028,7 +16028,7 @@ MonoBehaviour:
   limitOfActivePlayers: 2
   limitOfActiveEnemies: 2
   playerPrefabs:
-  - {fileID: 3686999765468893870, guid: 827462c2f9ba24740a25ef6cbf6fcf56, type: 3}
+  - {fileID: 5842227636548727938, guid: b9d7b21fcbdf68e4b854d8c13806a143, type: 3}
   - {fileID: 5842227636548727938, guid: 65bbc0e06f3cb40448ce85a00d0b0285, type: 3}
   - {fileID: 3686999765468893870, guid: 827462c2f9ba24740a25ef6cbf6fcf56, type: 3}
   enemyPrefabs:

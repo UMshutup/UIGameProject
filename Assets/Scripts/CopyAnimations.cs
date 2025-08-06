@@ -40,5 +40,13 @@ public class CopyAnimations : MonoBehaviour
         {
             animator.SetTrigger("sleep_alt_idle");
         }
+        if (parentAnimator.GetBool("knockout"))
+        {
+            animator.SetTrigger("knockout");
+        }
+        if (parentAnimator.GetBool("knockout_idle"))
+        {
+            animator.SetTrigger("knockout_idle");
+        }
     }
 }
