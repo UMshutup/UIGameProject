@@ -45,7 +45,7 @@ public class Fighter : MonoBehaviour
     [HideInInspector] public int chosenMoveNumber;
 
     [HideInInspector] public bool isGoingToBeHit;
-    [HideInInspector] public bool hasChosenMove;
+     public bool hasChosenMove;
 
     [Header("ID")]
     public int id;
@@ -61,6 +61,8 @@ public class Fighter : MonoBehaviour
     private Animator animator;
     private SpriteRenderer spriteRenderer;
 
+    private AudioManager audioManager;
+
     //Animation lenghts
     [HideInInspector] public float idleLenght;
     [HideInInspector] public float altIdleLenght;
@@ -71,7 +73,7 @@ public class Fighter : MonoBehaviour
 
     //Misc variables
     [HideInInspector] public List<Fighter> targets;
-    [HideInInspector] public bool hasChosenTarget;
+    public bool hasChosenTarget;
 
     private Transform originalTransform;
     public bool hasFinishedAnimation = false;
@@ -84,6 +86,8 @@ public class Fighter : MonoBehaviour
 
     private void Start()
     {
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         UpdateAnimClipTimes();
@@ -177,6 +181,13 @@ public class Fighter : MonoBehaviour
             }
         }
 
+        if (usableMoves.Count <= 0)
+        {
+            chosenMove = defaultMoveInstance;
+            hasChosenMove = true;
+            return;
+        }
+
 
         int moveNumber = Random.Range(0, usableMoves.Count);
         for (int i = 0; i < usableMoves.Count; i++)
@@ -223,10 +234,7 @@ public class Fighter : MonoBehaviour
                 {
                     Fighter randomFighter = _opposingTeam[Random.Range(0, _opposingTeam.Count)];
 
-                    while (randomFighter.fighterState == FighterState.DEAD)
-                    {
-                        randomFighter = _opposingTeam[Random.Range(0, _opposingTeam.Count)];
-                    }
+                    
 
                     targets = new List<Fighter> { randomFighter };
                     hasChosenTarget = true;
@@ -312,6 +320,7 @@ public class Fighter : MonoBehaviour
 
         if (HasTakenDamage())
         {
+            audioManager.PlaySFX(audioManager.hurt);
             animator.SetTrigger("hurt");
             previousHP = currentHP;
         }
@@ -366,7 +375,8 @@ public class Fighter : MonoBehaviour
                 {
                     sequence.Append(transform.DOMoveX(originalTransform.position.x + 0.1f, 0.1f)).
                         Append(transform.DOMoveX(originalTransform.position.x - 0.1f, 0.1f)).
-                        Append(transform.DOMoveX(originalTransform.position.x, 0.1f));
+                        Append(transform.DOMoveX(originalTransform.position.x, 0.1f)).
+                        AppendCallback(() => hasFinishedAnimation = true);
 
                     hasAppendedAnimation = true;
                 }
@@ -383,6 +393,7 @@ public class Fighter : MonoBehaviour
                         AppendCallback(() => CheckIfMoveLands()).
                         AppendCallback(() => HitVisualEffectMeelee()).
                         AppendCallback(() => DealDamage()).
+                        AppendCallback(() => audioManager.PlaySFX(chosenMove.soundEffect)).
                         AppendInterval(attackLenght).
                         Append(transform.DOMove(originalTransform.position, 0.5f)).
                         AppendCallback(() => hasFinishedAnimation = true);
@@ -399,6 +410,7 @@ public class Fighter : MonoBehaviour
                         AppendInterval(windupLenght).
                         AppendCallback(() => CheckIfMoveLands()).
                         AppendCallback(() => HitVisualEffectRanged()).
+                        AppendCallback(() => audioManager.PlaySFX(chosenMove.soundEffect)).
                         AppendInterval(Vector3.Distance(AimPosition.transform.position, GetHitPositionOfTargets()) / chosenMove.GetMoveVisualEffectPrefab().GetComponent<RangedDamageEffect>().projectileSpeed + 0.05f).
                         AppendCallback(() => DealDamage()).
                         AppendInterval(attackLenght).
@@ -406,10 +418,6 @@ public class Fighter : MonoBehaviour
                         AppendCallback(() => hasFinishedAnimation = true);
                     hasAppendedAnimation = true;
                 }
-            }
-            else
-            {
-
             }
         }
         else

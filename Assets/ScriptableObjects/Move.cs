@@ -12,6 +12,7 @@ public class Move : ScriptableObject
     [SerializeField] private MoveTarget moveTarget;
     [SerializeField] private bool hitsAWholeSquad;
     [SerializeField] private StatusEffectSO statusEffectOnHit;
+    [SerializeField] private AudioClip soundEffect;
 
     [Space]
     [SerializeField] private GameObject moveVisualEffectPrefab;
@@ -76,6 +77,11 @@ public class Move : ScriptableObject
     public StatusEffectSO GetStatusEffectOnHit()
     {
         return statusEffectOnHit;
+    }
+
+    public AudioClip GetSoundEffect()
+    {
+        return soundEffect;
     }
 
     public void ShowMoveVisualEffect(Vector3 _position, Quaternion _rotation, bool _hasMoveLanded)

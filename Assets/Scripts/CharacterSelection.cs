@@ -19,6 +19,13 @@ public class CharacterSelection : MonoBehaviour
     [SerializeField] private TextMeshProUGUI characterText;
     [SerializeField] private TextMeshProUGUI characterDescription;
 
+    AudioManager audioManager;
+
+    private void Start()
+    {
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+    }
+
     private void Update()
     {
         if (fighterList[selectionNumber] == null)
@@ -38,6 +45,8 @@ public class CharacterSelection : MonoBehaviour
 
     public void ChangeChar()
     {
+        audioManager.PlayUISound();
+
         if (selectionNumber >= fighterList.Count-1) 
         { 
             selectionNumber = 0;

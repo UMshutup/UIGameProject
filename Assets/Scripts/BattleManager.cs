@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class BattleManager : MonoBehaviour
 {
     [Range(1, 2)] public int limitOfActivePlayers;
-    [Range(1,3)] public int limitOfActiveEnemies;
+    [Range(1,3)] private int limitOfActiveEnemies;
     
     [Space]
     private List<GameObject> playerPrefabs;
-    public List<GameObject> enemyPrefabs;
+    private List<GameObject> enemyPrefabs;
 
     [Space]
     public List<Transform> playerPositions;
@@ -45,6 +46,8 @@ public class BattleManager : MonoBehaviour
     [Space]
     public List<StatusEffectSO> allStatusEffects;
 
+    private AudioManager audioManager;
+
     // booleans
     [Space]
     public bool hasRandomized;
@@ -59,10 +62,17 @@ public class BattleManager : MonoBehaviour
 
     private bool hasAppendedSwapAnimation;
 
+
     private void Start()
     {
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+        audioManager.PlayMusic(audioManager.battleMusic, 0.2f);
+
         playerPrefabs = new List<GameObject>();
         playerPrefabs = ChosenCharacters.playerFighters;
+
+        enemyPrefabs = new List<GameObject>();
+        enemyPrefabs = ChosenCharacters.enemyFighters;
 
         currentPlayers = new List<GameObject>();
         currentPlayerFighters = new List<Fighter>();
@@ -74,7 +84,9 @@ public class BattleManager : MonoBehaviour
         currentEnemyBackups = new List<GameObject>();
 
         state = BattleState.START;
-        
+
+        limitOfActiveEnemies = ChosenCharacters.numberOfEnemies;
+
         SetupBattle();
         
         state = BattleState.DECISIONTURNPLAYER1;
@@ -210,15 +222,6 @@ public class BattleManager : MonoBehaviour
     private void Update()
     {
 
-        for (int i = 0; i< currentPlayerFighters.Count; i++)
-        {
-            if (currentPlayerFighters[i].fighterState == FighterState.DEAD)
-            {
-                playerTeam.RebuildTeam();
-            }
-
-        }
-
         for (int i = 0; i < currentEnemyFighters.Count; i++)
         {
             if (currentEnemyFighters[i].fighterState == FighterState.DEAD)
@@ -237,19 +240,20 @@ public class BattleManager : MonoBehaviour
         {
             if (!hasAddedAP)
             {
-                foreach (Fighter fighter in currentPlayerFighters)
+                if (currentPlayerFighters.Count > 0 && currentEnemyFighters.Count > 0)
                 {
-                    fighter.RegenerateAP();
-                    hasAddedAP = true;
-                }
+                    foreach (Fighter fighter in currentPlayerFighters)
+                    {
+                        fighter.RegenerateAP();
+                        hasAddedAP = true;
+                    }
 
-                foreach (Fighter fighter in currentEnemyFighters)
-                {
-                    fighter.RegenerateAP();
-                    hasAddedAP = true;
+                    foreach (Fighter fighter in currentEnemyFighters)
+                    {
+                        fighter.RegenerateAP();
+                        hasAddedAP = true;
+                    }
                 }
-
-                
             }
         }
         else
@@ -257,6 +261,16 @@ public class BattleManager : MonoBehaviour
             hasAddedAP = false;
         }
 
+        
+
+        for (int i = 0; i < currentPlayerFighters.Count; i++)
+        {
+            if (currentPlayerFighters[i].fighterState == FighterState.DEAD)
+            {
+                playerTeam.RebuildTeam();
+            }
+
+        }
 
         hasEveryoneChosenAMove = true;
         foreach (Fighter currentFighter in fighters)
@@ -542,6 +556,7 @@ public class BattleManager : MonoBehaviour
             currentPlayerFighters[0].isBeingSwapped = false;
             currentPlayerFighters[1].isBeingSwapped = false;
 
+
             foreach (Fighter currentFighter in fighters)
             {
                 currentFighter.hasChosenMove = false;
@@ -588,7 +603,7 @@ public class BattleManager : MonoBehaviour
     {
         for (int i = 0; i < list.Count; i++)
         {
-            int rnd = UnityEngine.Random.Range(i, list.Count);
+            int rnd = Random.Range(i, list.Count);
             (list[i], list[rnd]) = (list[rnd], list[i]);
         }
     }

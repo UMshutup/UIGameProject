@@ -13,6 +13,7 @@ public class MoveInstance
     [HideInInspector] public MoveTarget moveTarget;
     [HideInInspector] public bool hitsAWholeSquad;
     [HideInInspector] public StatusEffectSO statusEffectOnHit;
+    [HideInInspector] public AudioClip soundEffect;
 
     [HideInInspector] public GameObject moveVisualEffectPrefab;
     [HideInInspector] public GameObject moveMissEffectPrefab;
@@ -34,6 +35,7 @@ public class MoveInstance
         moveMissEffectPrefab = move.GetMoveMissEffectPrefab();
         originalMove = move;
         statusEffectOnHit = move.GetStatusEffectOnHit();
+        soundEffect = move.GetSoundEffect();
     }
 
     public string GetMoveName()
@@ -94,6 +96,12 @@ public class MoveInstance
     {
         return statusEffectOnHit;
     }
+
+    public AudioClip GetSoundEffect()
+    {
+        return soundEffect;
+    }
+
 
     public void GiveStatusEffectToTargets(Fighter _target)
     {
