@@ -9,6 +9,10 @@ public class MoveButtonLogic : MonoBehaviour
     [SerializeField] private Button button;
     [SerializeField] private int currentPlayerNumber;
 
+    [SerializeField] private TextMeshProUGUI moveName;
+    [SerializeField] private TextMeshProUGUI damage;
+    [SerializeField] private TextMeshProUGUI moveCategory;
+
     public Image[] actionPointsCost;
 
     public Sprite emptyActionPointsSprite;
@@ -21,7 +25,9 @@ public class MoveButtonLogic : MonoBehaviour
 
     public void SetMoveToButton(int _moveNumber, int _moveCost)
     {
-        button.GetComponentInChildren<TextMeshProUGUI>().text = battleManager.currentPlayerFighters[currentPlayerNumber].currentMoves[_moveNumber].GetMoveName();
+        moveName.text = battleManager.currentPlayerFighters[currentPlayerNumber].currentMoves[_moveNumber].GetMoveName();
+        damage.text = string.Format("DMG: {0}", battleManager.currentPlayerFighters[currentPlayerNumber].currentMoves[_moveNumber].GetMoveDamage().ToString());
+        moveCategory.text = "(" + battleManager.currentPlayerFighters[currentPlayerNumber].currentMoves[_moveNumber].GetMoveCategory().ToString() + ")";
 
         for (int i = 0; i < actionPointsCost.Length; i++)
         {

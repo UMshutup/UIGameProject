@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &1
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5e6fedc2472449cead18ef23b5cb30d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Library:
+  - m_Name: Hurt
+    m_Hash: 666872612
+    m_CategoryList: []
+    m_OverrideEntries:
+    - m_Name: Frame_0
+      m_Hash: 77937192
+      m_Sprite: {fileID: -8511817369292071090, guid: 5ff86935fda74a747a6023fc675b872e, type: 3}
+      m_FromMain: 1
+      m_SpriteOverride: {fileID: -9127414842828771318, guid: 71deda0fb32662e47ba7a7b1a7308e0a, type: 3}
+    - m_Name: Frame_1
+      m_Hash: 866257598
+      m_Sprite: {fileID: 8107981002052745721, guid: 5ff86935fda74a747a6023fc675b872e, type: 3}
+      m_FromMain: 1
+      m_SpriteOverride: {fileID: -6915847964737822763, guid: 71deda0fb32662e47ba7a7b1a7308e0a, type: 3}
+    - m_Name: Frame_2
+      m_Hash: 715873028
+      m_Sprite: {fileID: -8511817369292071090, guid: 5ff86935fda74a747a6023fc675b872e, type: 3}
+      m_FromMain: 1
+      m_SpriteOverride: {fileID: 7859753617857431783, guid: 71deda0fb32662e47ba7a7b1a7308e0a, type: 3}
+    - m_Name: Frame_3
+      m_Hash: 497838994
+      m_Sprite: {fileID: 8107981002052745721, guid: 5ff86935fda74a747a6023fc675b872e, type: 3}
+      m_FromMain: 1
+      m_SpriteOverride: {fileID: -4960846522157149014, guid: 71deda0fb32662e47ba7a7b1a7308e0a, type: 3}
+    - m_Name: Frame_4
+      m_Hash: 63503921
+      m_Sprite: {fileID: -8511817369292071090, guid: 5ff86935fda74a747a6023fc675b872e, type: 3}
+      m_FromMain: 1
+      m_SpriteOverride: {fileID: -3485226282627821217, guid: 71deda0fb32662e47ba7a7b1a7308e0a, type: 3}
+    - m_Name: Frame_5
+      m_Hash: 886034087
+      m_Sprite: {fileID: 8107981002052745721, guid: 5ff86935fda74a747a6023fc675b872e, type: 3}
+      m_FromMain: 1
+      m_SpriteOverride: {fileID: 2846950436314135844, guid: 71deda0fb32662e47ba7a7b1a7308e0a, type: 3}
+    m_FromMain: 1
+    m_EntryOverrideCount: 6
+  m_PrimaryLibraryGUID: 97a353c6054f3a94d956fe179dc24f41
+  m_ModificationHash: 638902707900747497
+  m_Version: 1

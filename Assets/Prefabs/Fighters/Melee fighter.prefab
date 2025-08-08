@@ -423,6 +423,7 @@ MonoBehaviour:
   actionPointRegeneration: 2
   fighterState: 0
   moves:
+  - {fileID: 11400000, guid: 3981220914fcf5d4093d4bc78a74b67f, type: 2}
   - {fileID: 11400000, guid: b5498487bd839714a9a1eebac4bb7fc1, type: 2}
   - {fileID: 11400000, guid: bd7a2fa4082e2ae41bc2123425847457, type: 2}
   - {fileID: 11400000, guid: 6620fecded06f3d40aebddd1c0e7cf54, type: 2}

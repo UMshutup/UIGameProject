@@ -328,6 +328,11 @@ public class Fighter : MonoBehaviour
         {
             animator.SetTrigger("idle");
         }
+
+        if (fighterState != FighterState.NORMAL)
+        {
+            currentMoves = new List<MoveInstance> { defaultMoveInstance };
+        }
     }
 
     public void StatusEffectLogic()
