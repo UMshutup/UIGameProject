@@ -23,6 +23,11 @@ public class AudioManager : MonoBehaviour
         musicSource.Play();
     }
 
+    public void SlowDown()
+    {
+        musicSource.pitch = 0.5f;
+    }
+
     public void PlayUISound()
     {
         SFXSource.PlayOneShot(UI);

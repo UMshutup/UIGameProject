@@ -34,6 +34,9 @@ public class BattleManager : MonoBehaviour
     [HideInInspector] public List<Fighter> currentPlayerFighters;
     [HideInInspector] public List<Fighter> currentEnemyFighters;
 
+    [HideInInspector] public List<Fighter> allPlayerFighters;
+    [HideInInspector] public List<Fighter> allEnemyFighters;
+
     private List<Fighter> fighters;
 
     private List<Fighter> allFighters;
@@ -47,9 +50,14 @@ public class BattleManager : MonoBehaviour
     public List<StatusEffectSO> allStatusEffects;
 
     private AudioManager audioManager;
+    [SerializeField] private Camera MainCamera;
 
     // booleans
     [Space]
+
+    private bool allPlayerFighterDown = false;
+    private bool allEnemyFighterDown = false;
+
     public bool hasRandomized;
 
     public bool hasEveryoneChosenAMove;
@@ -61,6 +69,10 @@ public class BattleManager : MonoBehaviour
     private bool hasAppendedAnimation;
 
     private bool hasAppendedSwapAnimation;
+
+    private bool hasAppendedGameOverAnimation;
+
+    private int defeatedEnemies;
 
 
     private void Start()
@@ -82,6 +94,9 @@ public class BattleManager : MonoBehaviour
 
         currentPlayerBackups = new List<GameObject>();
         currentEnemyBackups = new List<GameObject>();
+
+        allPlayerFighters = new List<Fighter>();
+        allEnemyFighters = new List<Fighter>();
 
         state = BattleState.START;
 
@@ -113,7 +128,14 @@ public class BattleManager : MonoBehaviour
         for (int i = 0; i < currentPlayers.Count; i++)
         {
             currentPlayerFighters.Add(currentPlayers[i].GetComponent<Fighter>());
+            allPlayerFighters.Add(currentPlayers[i].GetComponent<Fighter>());
         }
+
+        for (int i = 0; i < currentPlayerBackups.Count; i++)
+        {
+            allPlayerFighters.Add(currentPlayerBackups[i].GetComponent<Fighter>());
+        }
+
 
 
         //enemies
@@ -131,8 +153,15 @@ public class BattleManager : MonoBehaviour
         for (int i = 0; i < currentEnemies.Count; i++)
         {
             currentEnemyFighters.Add(currentEnemies[i].GetComponent<Fighter>());
+            allEnemyFighters.Add(currentEnemies[i].GetComponent<Fighter>());
         }
 
+        for (int i = 0; i < currentEnemyBackups.Count; i++)
+        {
+            allEnemyFighters.Add(currentEnemyBackups[i].GetComponent<Fighter>());
+        }
+
+        //
         foreach (Fighter fighter in currentPlayerFighters)
         {
             fighter.targets = new List<Fighter> { currentEnemyFighters[0] };
@@ -309,7 +338,75 @@ public class BattleManager : MonoBehaviour
             }
 
         }
+
+        LoseLogic();
+        WinLogic();
     }
+
+    private void LoseLogic()
+    {
+        allPlayerFighterDown = true;
+        for (int i = 0; i< allPlayerFighters.Count; i++)
+        {
+            if (allPlayerFighters[i].fighterState == FighterState.NORMAL)
+            {
+                allPlayerFighterDown = false;
+            }
+        }
+
+        if (allPlayerFighterDown)
+        {
+            state = BattleState.LOST;
+        }
+
+        if (state == BattleState.LOST)
+        {
+            var sequence = DOTween.Sequence();
+
+            if (!hasAppendedGameOverAnimation)
+            {
+                audioManager.SlowDown();
+
+                sequence.Append(MainCamera.transform.DORotate(new Vector3(0, 0, 20.985f), 3f)).
+                    Join(MainCamera.transform.DOMove(new Vector3(0.532999992f, 1.10000002f, -9.14099979f), 3f)).
+                    AppendInterval(6).
+                    AppendCallback(() => SceneManager.LoadScene("MainMenu"));
+                hasAppendedGameOverAnimation = true;
+            }
+        }
+    }
+
+    private void WinLogic()
+    {
+        allEnemyFighterDown = true;
+
+        foreach (Fighter enemy in currentEnemyFighters)
+        {
+            if (enemy.fighterState == FighterState.NORMAL)
+            {
+                allEnemyFighterDown = false;
+            }
+        }
+
+        if (allEnemyFighterDown && currentEnemyBackups.Count <= 0)
+        {
+            state = BattleState.WON;
+        }
+
+        if (state == BattleState.WON)
+        {
+            var sequence = DOTween.Sequence();
+
+            if (!hasAppendedGameOverAnimation)
+            {
+                sequence.Append(MainCamera.transform.DOMove(new Vector3(-0.532999992f, 1.10000002f, -9.14099979f), 3f)).
+                    AppendInterval(6).
+                    AppendCallback(() => SceneManager.LoadScene("MainMenu"));
+                hasAppendedGameOverAnimation = true;
+            }
+        }
+    }
+
 
     public void SetSwapNumbers(int _fighterNumber)
     {

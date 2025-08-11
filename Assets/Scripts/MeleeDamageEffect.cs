@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class MeleeDamageEffect : MonoBehaviour
 {
-    private Animator animator;
+    [HideInInspector] public Animator animator;
 
-    private void Start()
+    private void Awake()
     {
         animator = GetComponentInChildren<Animator>();   
     }

@@ -109,6 +109,10 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3626916397498700004, guid: b5bd80514cfafd946bd0ce694115e85c, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3626916397498700004, guid: b5bd80514cfafd946bd0ce694115e85c, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: -876546973899608171, guid: 15a49e83b60725347a98ee9a7a4f16f7, type: 3}
@@ -257,9 +261,21 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3626916397498700004, guid: b5bd80514cfafd946bd0ce694115e85c, type: 3}
+      propertyPath: m_Size.x
+      value: 0.69
+      objectReference: {fileID: 0}
+    - target: {fileID: 3626916397498700004, guid: b5bd80514cfafd946bd0ce694115e85c, type: 3}
+      propertyPath: m_Size.y
+      value: 0.46
+      objectReference: {fileID: 0}
+    - target: {fileID: 3626916397498700004, guid: b5bd80514cfafd946bd0ce694115e85c, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -1312813773837689195, guid: 28915afe37437424a84c032b612ec6b5, type: 3}
+      objectReference: {fileID: 3298922902353897382, guid: 042a2b3190daff746964ad57c87ddbc5, type: 3}
+    - target: {fileID: 3626916397498700004, guid: b5bd80514cfafd946bd0ce694115e85c, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: b5bd80514cfafd946bd0ce694115e85c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -435,7 +451,7 @@ MonoBehaviour:
   chosenMoveNumber: 0
   isGoingToBeHit: 0
   hasChosenMove: 0
-  id: 0
+  id: 94
   AimPosition: {fileID: 4859197667234021163}
   HitPosition: {fileID: 1582390634563528154}
   idleLenght: 0
@@ -444,6 +460,7 @@ MonoBehaviour:
   attackLenght: 0
   hurtLenght: 0
   sleepIdleLenght: 0
+  timeToAddToAnimation: 0
   targets: []
   hasChosenTarget: 0
   hasFinishedAnimation: 0

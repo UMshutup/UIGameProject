@@ -71,6 +71,8 @@ public class Fighter : MonoBehaviour
     [HideInInspector] public float hurtLenght;
     [HideInInspector] public float sleepIdleLenght;
 
+    [HideInInspector] public float timeToAddToAnimation = 0;
+
     //Misc variables
     [HideInInspector] public List<Fighter> targets;
     public bool hasChosenTarget;
@@ -395,11 +397,13 @@ public class Fighter : MonoBehaviour
                         Join(transform.DOMoveZ(GetTargetPosition().z, 0.5f)).
                         AppendCallback(() => animator.SetTrigger("windup")).
                         AppendInterval(windupLenght / 1.5f).
+                        AppendCallback(() => AddTimeToAnimation()).
                         AppendCallback(() => CheckIfMoveLands()).
                         AppendCallback(() => HitVisualEffectMeelee()).
+                        AppendInterval(timeToAddToAnimation).
                         AppendCallback(() => DealDamage()).
                         AppendCallback(() => audioManager.PlaySFX(chosenMove.soundEffect)).
-                        AppendInterval(attackLenght).
+                        AppendInterval(attackLenght + timeToAddToAnimation).
                         Append(transform.DOMove(originalTransform.position, 0.5f)).
                         AppendCallback(() => hasFinishedAnimation = true);
                     hasAppendedAnimation = true;
@@ -413,12 +417,13 @@ public class Fighter : MonoBehaviour
                         Append(transform.DOLocalMove(originalTransform.localPosition - new Vector3(0.25f, 0, 0), 0.5f)).
                         AppendCallback(() => animator.SetTrigger("windup")).
                         AppendInterval(windupLenght).
+                        AppendCallback(() => AddTimeToAnimation()).
                         AppendCallback(() => CheckIfMoveLands()).
                         AppendCallback(() => HitVisualEffectRanged()).
                         AppendCallback(() => audioManager.PlaySFX(chosenMove.soundEffect)).
-                        AppendInterval(Vector3.Distance(AimPosition.transform.position, GetHitPositionOfTargets()) / chosenMove.GetMoveVisualEffectPrefab().GetComponent<RangedDamageEffect>().projectileSpeed + 0.05f).
+                        AppendInterval(Vector3.Distance(AimPosition.transform.position, GetHitPositionOfTargets()) / (chosenMove.GetMoveVisualEffectPrefab().GetComponent<RangedDamageEffect>().projectileSpeed + timeToAddToAnimation) + 0.05f).
                         AppendCallback(() => DealDamage()).
-                        AppendInterval(attackLenght).
+                        AppendInterval(attackLenght + timeToAddToAnimation).
                         Append(transform.DOLocalMove(originalTransform.localPosition, 0.5f)).
                         AppendCallback(() => hasFinishedAnimation = true);
                     hasAppendedAnimation = true;
@@ -440,6 +445,18 @@ public class Fighter : MonoBehaviour
 
 
 
+    }
+
+    public void AddTimeToAnimation()
+    {
+        if (chosenMove.GetHasPreMoveVisualEffect())
+        {
+            timeToAddToAnimation = 0.35f;
+        }
+        else
+        {
+            timeToAddToAnimation = 0;
+        }
     }
 
     public void KnockoutAnimation()
@@ -536,7 +553,7 @@ public class Fighter : MonoBehaviour
     {
         foreach (Fighter fighter in targets)
         {
-            chosenMove.ShowMoveVisualEffect(fighter.HitPosition.transform.position, fighter.HitPosition.transform.rotation, fighter.isGoingToBeHit);
+            chosenMove.ShowMoveVisualEffect(this.HitPosition.transform.position, this.HitPosition.transform.rotation, fighter.HitPosition.transform.position, fighter.HitPosition.transform.rotation, fighter.isGoingToBeHit);
         }
     }
 
@@ -545,21 +562,21 @@ public class Fighter : MonoBehaviour
         foreach (Fighter fighter in targets)
         {
             AimPosition.GetComponent<AimToTarget>().Aim(fighter.HitPosition.transform.position);
-            chosenMove.ShowMoveVisualEffect(AimPosition.transform.position, AimPosition.transform.rotation, fighter.isGoingToBeHit);
+            chosenMove.ShowMoveVisualEffect(AimPosition.transform.position, AimPosition.transform.rotation, fighter.HitPosition.transform.position, fighter.HitPosition.transform.rotation, fighter.isGoingToBeHit);
         }
     }
 
     private void CheckIfMoveLands()
     {
-        for (int i = 0; i<targets.Count; i++)
+        foreach (Fighter target in targets)
         {
-            if (Random.Range(0, 100f) - (this.accuracy - 100) < chosenMove.GetMoveAccuracy() - (targets[i].evasion - 100))
+            if (Random.Range(0, 100f) - (this.accuracy - 100) < chosenMove.GetMoveAccuracy() - (target.evasion - 100))
             {
-                targets[i].isGoingToBeHit = true;
+                target.isGoingToBeHit = true;
             }
             else
             {
-                targets[i].isGoingToBeHit = false;
+                target.isGoingToBeHit = false;
             }
         }
 
@@ -567,7 +584,6 @@ public class Fighter : MonoBehaviour
 
     private void DealDamage()
     {
-        
         foreach (Fighter target in targets)
         {
             if (target.isGoingToBeHit)

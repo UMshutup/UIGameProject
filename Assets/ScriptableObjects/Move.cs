@@ -1,4 +1,6 @@
+using DG.Tweening;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 [CreateAssetMenu(fileName = "Move", menuName = "Scriptable Objects/Move")]
 public class Move : ScriptableObject
@@ -15,7 +17,10 @@ public class Move : ScriptableObject
     [SerializeField] private AudioClip soundEffect;
 
     [Space]
+    [SerializeField] private bool HasPreMoveVisualEffect;
+    [Space]
     [SerializeField] private GameObject moveVisualEffectPrefab;
+    [SerializeField] private GameObject preMoveVisualEffectPrefab;
     [SerializeField] private GameObject moveMissEffectPrefab;
 
     private bool hasChangedTarget = false;
@@ -68,6 +73,10 @@ public class Move : ScriptableObject
     {
         return moveVisualEffectPrefab;
     }
+    public GameObject GetPreMoveVisualEffectPrefab()
+    {
+        return preMoveVisualEffectPrefab;
+    }
 
     public GameObject GetMoveMissEffectPrefab()
     {
@@ -84,31 +93,59 @@ public class Move : ScriptableObject
         return soundEffect;
     }
 
-    public void ShowMoveVisualEffect(Vector3 _position, Quaternion _rotation, bool _hasMoveLanded)
+    public bool GetHasPreMoveVisualEffect()
     {
+        return HasPreMoveVisualEffect;
+    }
+
+    public void ShowMoveVisualEffect(Vector3 _positionOfUser, Quaternion _rotationOfUser, Vector3 _positionOfTarget, Quaternion _rotationOfTarget, bool _hasMoveLanded)
+    {
+        var sequence = DOTween.Sequence();
+
         if (moveVisualEffectPrefab != null)
         {
             if (moveCategory == MoveCategory.MELEE)
             {
                 if (_hasMoveLanded)
                 {
-                    Instantiate(moveVisualEffectPrefab, _position + new Vector3(0, 0, -0.05f), _rotation);
+                    if (HasPreMoveVisualEffect && preMoveVisualEffectPrefab != null)
+                    {
+                        sequence.AppendCallback(() => Instantiate(preMoveVisualEffectPrefab, _positionOfUser + new Vector3(0, 0, -0.05f), _rotationOfUser)).
+                            AppendInterval(0.3f).
+                            AppendCallback(() => Instantiate(moveVisualEffectPrefab, _positionOfTarget + new Vector3(0, 0, -0.05f), _rotationOfTarget));
+                    }
+                    else
+                    {
+                        Instantiate(moveVisualEffectPrefab, _positionOfTarget + new Vector3(0, 0, -0.05f), _rotationOfTarget);
+                    }
+                    
                 }
                 else
                 {
-                    Instantiate(moveMissEffectPrefab, _position + new Vector3(0, 0, -0.05f), _rotation);
+                    Instantiate(moveMissEffectPrefab, _positionOfTarget + new Vector3(0, 0, -0.05f), _rotationOfTarget);
                 }
             }
             else if (moveCategory == MoveCategory.RANGED)
             {
                 if (_hasMoveLanded)
                 {
-                    Instantiate(moveVisualEffectPrefab, _position, _rotation);
+
+                    if (HasPreMoveVisualEffect && preMoveVisualEffectPrefab != null)
+                    {
+                        sequence.AppendCallback(() => Instantiate(preMoveVisualEffectPrefab, _positionOfUser + new Vector3(0, 0, -0.05f), _rotationOfTarget)).
+                            AppendInterval(0.3f).
+                            AppendCallback(() => Instantiate(moveVisualEffectPrefab, _positionOfUser, _rotationOfUser));
+                    }
+                    else
+                    {
+                        Instantiate(moveVisualEffectPrefab, _positionOfUser, _rotationOfUser); ;
+                    }
+                    
                 }
                 else
                 {
-                    Instantiate(moveMissEffectPrefab, _position + new Vector3(0, 0, -0.05f), _rotation);
-                    Instantiate(moveVisualEffectPrefab, _position, Quaternion.Euler(Random.Range(0.0f, 360.0f), Random.Range(0.0f, 360.0f), Random.Range(0.0f, 360.0f)));
+                    Instantiate(moveMissEffectPrefab, _positionOfUser + new Vector3(0, 0, -0.05f), _rotationOfUser);
+                    Instantiate(moveVisualEffectPrefab, _positionOfUser, Quaternion.Euler(Random.Range(0.0f, 360.0f), Random.Range(0.0f, 360.0f), Random.Range(0.0f, 360.0f)));
                 }
 
             }

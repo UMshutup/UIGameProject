@@ -24,6 +24,10 @@ public class BattleUIManager : MonoBehaviour
     [SerializeField] private List<FighterStatsUI> mainPlayersUI;
     [SerializeField] private List<FighterStatsUI> backupPlayersUI;
 
+    [Header("Game Over UI")]
+    [SerializeField] private GameObject winUI;
+    [SerializeField] private GameObject loseUI;
+
     private List<FighterStatsUI> playerUI;
     private List<FighterStatsUI> enemyUI;
 
@@ -38,6 +42,8 @@ public class BattleUIManager : MonoBehaviour
     private bool hasAppendedAnimation2 = false;
     private bool hasAppendedAnimation3 = false;
     private bool hasAppendedAnimation4 = false;
+
+    private bool hasAppendedGameOverAnimation = false;
 
     private void Start()
     {
@@ -105,6 +111,49 @@ public class BattleUIManager : MonoBehaviour
             backupPlayersUI[i].UpdateStats(battleManager.currentPlayerBackups[i].GetComponent<Fighter>(), battleManager.allStatusEffects);
         }
 
+        if (battleManager.state == BattleState.LOST)
+        {
+            if (!hasAppendedGameOverAnimation)
+            {
+                var sequence = DOTween.Sequence();
+
+                sequence.AppendCallback(() => HideEverything()).
+                    AppendCallback(() => loseUI.SetActive(true)).
+                    Append(loseUI.GetComponent<Image>().DOFade(0.2f, 3f)).
+                    Join(loseUI.GetComponentInChildren<TextMeshProUGUI>().DOFade(1f, 2f));
+
+                hasAppendedGameOverAnimation = true;
+            }
+        }
+
+        if (battleManager.state == BattleState.WON)
+        {
+            if (!hasAppendedGameOverAnimation)
+            {
+                var sequence = DOTween.Sequence();
+
+                sequence.AppendCallback(() => HideEverything()).
+                    AppendCallback(() => winUI.SetActive(true)).
+                    Append(winUI.GetComponent<Image>().DOFade(0.2f, 3f)).
+                    Join(winUI.GetComponentInChildren<TextMeshProUGUI>().DOFade(1f, 2f));
+
+                hasAppendedGameOverAnimation = true;
+            }
+        }
+
+    }
+
+    private void HideEverything()
+    {
+
+
+        actionsPlayer1.SetActive(false);
+        actionsPlayer2.SetActive(false);
+        moveListPlayer1.SetActive(false);
+        moveListPlayer2.SetActive(false);
+        playerStats.SetActive(false);
+        enemyStats.SetActive(false);
+        teamBackgroundUI.SetActive(false);
     }
 
     private void MenuAnimations()

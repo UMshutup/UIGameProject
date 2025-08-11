@@ -250,9 +250,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterSlot: 0
   fighterList:
+  - {fileID: 3686999765468893870, guid: 827462c2f9ba24740a25ef6cbf6fcf56, type: 3}
   - {fileID: 5842227636548727938, guid: 65bbc0e06f3cb40448ce85a00d0b0285, type: 3}
   - {fileID: 5842227636548727938, guid: b9d7b21fcbdf68e4b854d8c13806a143, type: 3}
-  - {fileID: 3686999765468893870, guid: 827462c2f9ba24740a25ef6cbf6fcf56, type: 3}
   selectionNumber: 0
   characterImage: {fileID: 90656300}
   NoCharacter: {fileID: 21300000, guid: fc90c7547c38cb14a9b35e02505ca60c, type: 3}
@@ -2044,7 +2044,7 @@ GameObject:
   - component: {fileID: 361226165}
   - component: {fileID: 361226164}
   m_Layer: 5
-  m_Name: Button (5)
+  m_Name: NumberOfFighterButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4409,7 +4409,7 @@ GameObject:
   - component: {fileID: 892001495}
   - component: {fileID: 892001498}
   m_Layer: 5
-  m_Name: Button (3)
+  m_Name: Play
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4561,12 +4561,12 @@ MonoBehaviour:
   - {fileID: 1022202309}
   - {fileID: 2014453332}
   selectedEnemyCharacters:
-  - {fileID: 1026186893}
   - {fileID: 43365044}
-  - {fileID: 1627185471}
+  - {fileID: 1026186893}
   - {fileID: 1227287818}
-  - {fileID: 1402169367}
+  - {fileID: 1627185471}
   - {fileID: 2080017711}
+  - {fileID: 1402169367}
   numberOfCharacters: {fileID: 361226164}
 --- !u!1 &909722948
 GameObject:
@@ -5224,9 +5224,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterSlot: 1
   fighterList:
-  - {fileID: 3686999765468893870, guid: 827462c2f9ba24740a25ef6cbf6fcf56, type: 3}
   - {fileID: 5842227636548727938, guid: 65bbc0e06f3cb40448ce85a00d0b0285, type: 3}
   - {fileID: 5842227636548727938, guid: b9d7b21fcbdf68e4b854d8c13806a143, type: 3}
+  - {fileID: 3686999765468893870, guid: 827462c2f9ba24740a25ef6cbf6fcf56, type: 3}
   selectionNumber: 0
   characterImage: {fileID: 310738509}
   NoCharacter: {fileID: 21300000, guid: fc90c7547c38cb14a9b35e02505ca60c, type: 3}
@@ -8350,7 +8350,7 @@ GameObject:
   - component: {fileID: 1813534332}
   - component: {fileID: 1813534331}
   m_Layer: 5
-  m_Name: Button (4)
+  m_Name: ESc
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

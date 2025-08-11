@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class SelectableTeam : MonoBehaviour
 {
     private List<SelectableFighter> selectableFighters;
-    private List<Fighter> fighters;
+    [HideInInspector] public List<Fighter> fighters;
 
     private bool selectWholeTeam;
     private bool isOnSpriteWholeTeam;

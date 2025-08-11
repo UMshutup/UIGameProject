@@ -19,6 +19,9 @@ public class MoveInstance
     [HideInInspector] public GameObject moveMissEffectPrefab;
     [HideInInspector] public Move originalMove;
 
+    [Space]
+    [SerializeField] private bool HasPreMoveVisualEffect;
+
     public MoveInstance(Move move)
     {
         moveName = move.GetMoveName();
@@ -36,6 +39,8 @@ public class MoveInstance
         originalMove = move;
         statusEffectOnHit = move.GetStatusEffectOnHit();
         soundEffect = move.GetSoundEffect();
+
+        HasPreMoveVisualEffect = move.GetHasPreMoveVisualEffect();
     }
 
     public string GetMoveName()
@@ -102,6 +107,11 @@ public class MoveInstance
         return soundEffect;
     }
 
+    public bool GetHasPreMoveVisualEffect()
+    {
+        return HasPreMoveVisualEffect;
+    }
+
 
     public void GiveStatusEffectToTargets(Fighter _target)
     {
@@ -136,8 +146,8 @@ public class MoveInstance
         }
     }
 
-    public void ShowMoveVisualEffect(Vector3 _position, Quaternion _rotation, bool _hasMoveLanded)
+    public void ShowMoveVisualEffect(Vector3 _positionOfUser, Quaternion _rotationOfUser, Vector3 _positionOfTarget, Quaternion _rotationOfTarget, bool _hasMoveLanded)
     {
-        originalMove.ShowMoveVisualEffect(_position, _rotation, _hasMoveLanded);
+        originalMove.ShowMoveVisualEffect(_positionOfUser, _rotationOfUser, _positionOfTarget, _rotationOfTarget, _hasMoveLanded);
     }
 }

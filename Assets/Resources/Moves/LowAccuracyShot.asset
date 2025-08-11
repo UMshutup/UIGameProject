@@ -15,12 +15,14 @@ MonoBehaviour:
   moveName: Low Accuracy Shot
   moveDescription: Deals a lot of damage but has low accuracy
   moveDamage: 3
-  moveAccuracy: 50
+  moveAccuracy: 0
   moveApCost: 1
   moveCategory: 1
   moveTarget: 0
   hitsAWholeSquad: 0
   statusEffectOnHit: {fileID: 0}
   soundEffect: {fileID: 8300000, guid: 225454f39a8239340bdde1e2487a1ea5, type: 3}
+  HasPreMoveVisualEffect: 0
   moveVisualEffectPrefab: {fileID: 780169709837173935, guid: 2859c653222ac3f40aa5271fc1610ebd, type: 3}
+  preMoveVisualEffectPrefab: {fileID: 0}
   moveMissEffectPrefab: {fileID: 3062664297577719860, guid: 347ca88f1f177c44ab79e2aaa04be71d, type: 3}
