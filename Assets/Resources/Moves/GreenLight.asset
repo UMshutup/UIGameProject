@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03d7adde6756f1b46822aab0abc576ac, type: 3}
+  m_Name: GreenLight
+  m_EditorClassIdentifier: 
+  moveName: Green Light
+  moveDescription: Deals melee damage
+  moveDamage: 0
+  moveAccuracy: 100
+  moveApCost: 3
+  moveCategory: 0
+  moveTarget: 2
+  hitsAWholeSquad: 1
+  statusEffectOnHit: {fileID: 11400000, guid: 9cd26d8f068af4049acdcce15f7b452a, type: 2}
+  soundEffect: {fileID: 8300000, guid: e4c35da1532a10544a03ea3d360fda16, type: 3}
+  HasPreMoveVisualEffect: 0
+  moveVisualEffectPrefab: {fileID: 3062664297577719860, guid: 09370667db042bf4ea24f24b53aeae73, type: 3}
+  preMoveVisualEffectPrefab: {fileID: 0}
+  moveMissEffectPrefab: {fileID: 3062664297577719860, guid: 347ca88f1f177c44ab79e2aaa04be71d, type: 3}

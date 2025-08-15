@@ -383,6 +383,7 @@ public class Fighter : MonoBehaviour
                     sequence.Append(transform.DOMoveX(originalTransform.position.x + 0.1f, 0.1f)).
                         Append(transform.DOMoveX(originalTransform.position.x - 0.1f, 0.1f)).
                         Append(transform.DOMoveX(originalTransform.position.x, 0.1f)).
+                        AppendCallback(() => ReduceDurationOfStatusEffects()).
                         AppendCallback(() => hasFinishedAnimation = true);
 
                     hasAppendedAnimation = true;
@@ -405,6 +406,7 @@ public class Fighter : MonoBehaviour
                         AppendCallback(() => audioManager.PlaySFX(chosenMove.soundEffect)).
                         AppendInterval(attackLenght + timeToAddToAnimation).
                         Append(transform.DOMove(originalTransform.position, 0.5f)).
+                        AppendCallback(() => ReduceDurationOfStatusEffects()).
                         AppendCallback(() => hasFinishedAnimation = true);
                     hasAppendedAnimation = true;
                 }
@@ -425,6 +427,7 @@ public class Fighter : MonoBehaviour
                         AppendCallback(() => DealDamage()).
                         AppendInterval(attackLenght + timeToAddToAnimation).
                         Append(transform.DOLocalMove(originalTransform.localPosition, 0.5f)).
+                        AppendCallback(() => ReduceDurationOfStatusEffects()).
                         AppendCallback(() => hasFinishedAnimation = true);
                     hasAppendedAnimation = true;
                 }

@@ -441,12 +441,12 @@ MonoBehaviour:
   actionPointRegeneration: 2
   fighterState: 0
   moves:
+  - {fileID: 11400000, guid: f792b50069a5dfe4a866be11fa3ba951, type: 2}
   - {fileID: 11400000, guid: 6e75aecc35e39ab4aa6109fcbb7a0cb9, type: 2}
   - {fileID: 11400000, guid: bd7a2fa4082e2ae41bc2123425847457, type: 2}
   - {fileID: 11400000, guid: b5498487bd839714a9a1eebac4bb7fc1, type: 2}
-  - {fileID: 11400000, guid: 22a74328dafb5574794ad57c6a851452, type: 2}
-  - {fileID: 11400000, guid: b1aaee7d243e6b143a184057da9821bd, type: 2}
   - {fileID: 11400000, guid: 8306f602bde82d8449e7647b01b6cab9, type: 2}
+  - {fileID: 11400000, guid: 7e0e5120018d9694fa56311ff92c6e19, type: 2}
   defaultMove: {fileID: 11400000, guid: d079afda5cdbc12408cde4fcd6c90619, type: 2}
   chosenMoveNumber: 0
   isGoingToBeHit: 0

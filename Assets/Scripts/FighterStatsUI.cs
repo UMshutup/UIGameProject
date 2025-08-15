@@ -87,10 +87,17 @@ public class FighterStatsUI : MonoBehaviour
 
             for (int i = 0; i < _statusEffectInstances.Count; i++)
             {
-                if (_fighter.statusEffectInstances.Contains(_statusEffectInstances[i]))
+                if (_fighter.statusEffectInstances.Count > 0)
                 {
-                    icons[i].gameObject.SetActive(true);
-                    icons[i].GetComponentInChildren<TextMeshProUGUI>().text = _statusEffectInstances[i].statusEffectDuration.ToString();
+                    for (int j = 0; j < _fighter.statusEffectInstances.Count; j++)
+                    {
+                        if (_fighter.statusEffectInstances[j].Equals(_statusEffectInstances[i]))
+                        {
+                            icons[i].gameObject.SetActive(true);
+                            icons[i].gameObject.GetComponentInChildren<TextMeshProUGUI>().text = _fighter.statusEffectInstances[j].statusEffectDuration.ToString();
+                        }
+                        
+                    }
                 }
                 else
                 {
