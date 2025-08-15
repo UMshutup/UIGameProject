@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 03d7adde6756f1b46822aab0abc576ac, type: 3}
-  m_Name: TestMultiiShot
+  m_Name: UltraSlap
   m_EditorClassIdentifier: 
-  moveName: Pea shotgun
+  moveName: Ultra Slap
   moveDescription: Deals melee damage
-  moveDamage: 1
+  moveDamage: 5
   moveAccuracy: 100
-  moveApCost: 3
-  moveCategory: 1
+  moveApCost: 6
+  moveCategory: 0
   moveTarget: 0
-  hitsAWholeSquad: 1
+  hitsAWholeSquad: 0
   statusEffectOnHit: {fileID: 0}
-  soundEffect: {fileID: 8300000, guid: 225454f39a8239340bdde1e2487a1ea5, type: 3}
+  soundEffect: {fileID: 8300000, guid: 5b4b2e0f42f8ac241bd9c0ca09a4533e, type: 3}
   HasPreMoveVisualEffect: 0
-  moveVisualEffectPrefab: {fileID: 780169709837173935, guid: 89f7eb4b464f6f544b53189f0916e962, type: 3}
+  moveVisualEffectPrefab: {fileID: 3062664297577719860, guid: 120189685d9e6724d8e1cecc17a48b8e, type: 3}
   preMoveVisualEffectPrefab: {fileID: 0}
   moveMissEffectPrefab: {fileID: 3062664297577719860, guid: 347ca88f1f177c44ab79e2aaa04be71d, type: 3}

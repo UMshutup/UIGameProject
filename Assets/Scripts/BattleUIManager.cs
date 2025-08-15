@@ -15,6 +15,9 @@ public class BattleUIManager : MonoBehaviour
     [SerializeField] private GameObject moveListPlayer1;
     [SerializeField] private GameObject moveListPlayer2;
 
+    [SerializeField] private TextMeshProUGUI battleTextPlayer1;
+    [SerializeField] private TextMeshProUGUI battleTextPlayer2;
+
     [Header("StatsUI")]
     [SerializeField] private GameObject playerStats;
     [SerializeField] private GameObject enemyStats;
@@ -31,6 +34,8 @@ public class BattleUIManager : MonoBehaviour
     private List<FighterStatsUI> playerUI;
     private List<FighterStatsUI> enemyUI;
 
+    private int randomNumber;
+
 
 
     private bool isMoveList1OnScreen;
@@ -44,6 +49,8 @@ public class BattleUIManager : MonoBehaviour
     private bool hasAppendedAnimation4 = false;
 
     private bool hasAppendedGameOverAnimation = false;
+
+    private bool hasRandomized;
 
     private void Start()
     {
@@ -79,6 +86,8 @@ public class BattleUIManager : MonoBehaviour
     private void Update()
     {
         MenuAnimations();
+
+        UpdateBattleText();
 
         for (int i = 0; i < battleManager.currentPlayerFighters.Count; i++)
         {
@@ -141,6 +150,80 @@ public class BattleUIManager : MonoBehaviour
             }
         }
 
+    }
+
+    public void UpdateBattleText()
+    {
+        
+        if (battleManager.state == BattleState.DECISIONTURNPLAYER1 && !hasRandomized)
+        {
+            randomNumber = Random.Range(0, 5);
+            hasRandomized = true;
+        }
+        else if(battleManager.state == BattleState.ACTIONTURN)
+        {
+            hasRandomized = false;
+        }
+
+        switch (battleManager.currentPlayerFighters[0].fighterState)
+        {
+            case FighterState.NORMAL:
+                switch (randomNumber)
+                {
+                    case 0:
+                        battleTextPlayer1.text = battleManager.currentPlayerFighters[0].fighterName + " is deciding a move to use...";
+                        break;
+                    case 1:
+                        battleTextPlayer1.text = battleManager.currentPlayerFighters[0].fighterName + " is... forming a strategy? Maybe?";
+                        break;
+                    case 2:
+                        battleTextPlayer1.text = battleManager.currentPlayerFighters[0].fighterName + " is trying his best :)";
+                        break;
+                    case 3:
+                        battleTextPlayer1.text = "Everything seems OK";
+                        break;
+                    case 4:
+                        battleTextPlayer1.text = battleManager.currentPlayerFighters[0].fighterName + " is deciding a move to use!";
+                        break;
+                }
+                break;
+            case FighterState.KNOCKOUT:
+                battleTextPlayer1.text = battleManager.currentPlayerFighters[0].fighterName + " has been k.o'ed! Change fighter!";
+                break;
+            case FighterState.DEAD:
+                battleTextPlayer1.text = battleManager.currentPlayerFighters[0].fighterName + " is dead! oh my!";
+                break;
+        }
+
+        switch (battleManager.currentPlayerFighters[1].fighterState)
+        {
+            case FighterState.NORMAL:
+                switch (randomNumber)
+                {
+                    case 0:
+                        battleTextPlayer2.text = battleManager.currentPlayerFighters[1].fighterName + " is deciding a move to use.";
+                        break;
+                    case 1:
+                        battleTextPlayer2.text = battleManager.currentPlayerFighters[1].fighterName + " is hopefully not spamming the same move!";
+                        break;
+                    case 2:
+                        battleTextPlayer2.text = battleManager.currentPlayerFighters[1].fighterName + " is trying his best :)";
+                        break;
+                    case 3:
+                        battleTextPlayer2.text = battleManager.currentPlayerFighters[1].fighterName + " is fighting!";
+                        break;
+                    case 4:
+                        battleTextPlayer2.text = battleManager.currentPlayerFighters[1].fighterName + " is deciding a move to use?";
+                        break;
+                }
+                break;
+            case FighterState.KNOCKOUT:
+                battleTextPlayer2.text = battleManager.currentPlayerFighters[1].fighterName + " is exhaused! change fighter!";
+                break;
+            case FighterState.DEAD:
+                battleTextPlayer2.text = battleManager.currentPlayerFighters[1].fighterName + " has passed. RIP";
+                break;
+        }
     }
 
     private void HideEverything()

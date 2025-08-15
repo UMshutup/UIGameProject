@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03d7adde6756f1b46822aab0abc576ac, type: 3}
   m_Name: TestMultiHit
   m_EditorClassIdentifier: 
-  moveName: Test Multi Hit
+  moveName: Multi tackle
   moveDescription: Deals melee damage
   moveDamage: 1
   moveAccuracy: 100

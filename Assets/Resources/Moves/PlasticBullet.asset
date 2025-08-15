@@ -16,7 +16,7 @@ MonoBehaviour:
   moveDescription: Deals ranged damage
   moveDamage: 5
   moveAccuracy: 100
-  moveApCost: 5
+  moveApCost: 6
   moveCategory: 1
   moveTarget: 0
   hitsAWholeSquad: 0

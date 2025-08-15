@@ -32,4 +32,12 @@ public class AssignCharacters : MonoBehaviour
 
         SceneManager.LoadScene("Battle");
     }
+
+    private void Update()
+    {
+        if (numberOfCharacters.selectionNumber == 3 && selectedEnemyCharacters[2].selectionNumber == 0)
+        {
+            selectedEnemyCharacters[2].selectionNumber = 1;
+        }
+    }
 }

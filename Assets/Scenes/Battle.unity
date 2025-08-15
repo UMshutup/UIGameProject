@@ -21322,6 +21322,8 @@ MonoBehaviour:
   actionsPlayer2: {fileID: 1851224785}
   moveListPlayer1: {fileID: 1636224865}
   moveListPlayer2: {fileID: 1002918868}
+  battleTextPlayer1: {fileID: 1656473993}
+  battleTextPlayer2: {fileID: 582536600}
   playerStats: {fileID: 502372451}
   enemyStats: {fileID: 1227635086}
   teamBackgroundUI: {fileID: 1030898197}
