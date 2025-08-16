@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Trick
   m_EditorClassIdentifier: 
   moveName: Trick
-  moveDescription: Deals melee damage
+  moveDescription: Reduces the target's melee defence
   moveDamage: 0
   moveAccuracy: 100
   moveApCost: 1

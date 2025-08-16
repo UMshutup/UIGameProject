@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: TestHitYourself
   m_EditorClassIdentifier: 
   moveName: Hit yourself
-  moveDescription: Deals melee damage
+  moveDescription: Hit yourself.
   moveDamage: 2
   moveAccuracy: 100
   moveApCost: 0

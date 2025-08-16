@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PlasticBullet
   m_EditorClassIdentifier: 
   moveName: Plastic bullet
-  moveDescription: Deals ranged damage
+  moveDescription: Deals a lot of damage!
   moveDamage: 5
   moveAccuracy: 100
   moveApCost: 6

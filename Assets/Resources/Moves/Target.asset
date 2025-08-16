@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 03d7adde6756f1b46822aab0abc576ac, type: 3}
-  m_Name: bonk
+  m_Name: Target
   m_EditorClassIdentifier: 
-  moveName: Bonk
-  moveDescription: Deals damage and reduces the target's melee defence
-  moveDamage: 2
+  moveName: Target
+  moveDescription: Reduces the target's ranged defence
+  moveDamage: 0
   moveAccuracy: 100
-  moveApCost: 4
+  moveApCost: 1
   moveCategory: 0
   moveTarget: 0
   hitsAWholeSquad: 0
-  statusEffectOnHit: {fileID: 11400000, guid: d7a31f30c98f3aa48b07092a34c49d6a, type: 2}
-  soundEffect: {fileID: 8300000, guid: 9a5dc823513e1e84195d5a6d77fd5f6f, type: 3}
+  statusEffectOnHit: {fileID: 11400000, guid: 8f2b1520aba05fc4682b94980f6067cc, type: 2}
+  soundEffect: {fileID: 8300000, guid: 225454f39a8239340bdde1e2487a1ea5, type: 3}
   HasPreMoveVisualEffect: 0
-  moveVisualEffectPrefab: {fileID: 3062664297577719860, guid: 13c8e83e9ec78ef47b4188703d88cb0b, type: 3}
+  moveVisualEffectPrefab: {fileID: 3062664297577719860, guid: 160b9dd857ea0774b8fbc6816c812de5, type: 3}
   preMoveVisualEffectPrefab: {fileID: 0}
   moveMissEffectPrefab: {fileID: 3062664297577719860, guid: 347ca88f1f177c44ab79e2aaa04be71d, type: 3}

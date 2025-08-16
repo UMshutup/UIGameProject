@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PeaShot
   m_EditorClassIdentifier: 
   moveName: Pea shot
-  moveDescription: Deals ranged damage
+  moveDescription: Deals damage
   moveDamage: 1
   moveAccuracy: 100
   moveApCost: 0

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: UltraSlap
   m_EditorClassIdentifier: 
   moveName: Ultra Slap
-  moveDescription: Deals melee damage
+  moveDescription: Deals a lot of damage!
   moveDamage: 5
   moveAccuracy: 100
   moveApCost: 6

@@ -2,6 +2,7 @@ using DG.Tweening;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -223,6 +224,27 @@ public class BattleUIManager : MonoBehaviour
             case FighterState.DEAD:
                 battleTextPlayer2.text = battleManager.currentPlayerFighters[1].fighterName + " has passed. RIP";
                 break;
+        }
+        DisableWhileActionTurn();
+    }
+
+    private void DisableWhileActionTurn()
+    {
+        List<Button> buttons = actionsPlayer2.GetComponentsInChildren<Button>().ToList();
+
+        if (battleManager.state == BattleState.ACTIONTURN)
+        {
+            foreach(Button button in buttons)
+            {
+                button.interactable = false;
+            }
+        }
+        else
+        {
+            foreach (Button button in buttons)
+            {
+                button.interactable = true;
+            }
         }
     }
 

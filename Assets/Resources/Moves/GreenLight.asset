@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: GreenLight
   m_EditorClassIdentifier: 
   moveName: Green Light
-  moveDescription: Deals melee damage
+  moveDescription: Raises the target's speed
   moveDamage: 0
   moveAccuracy: 100
   moveApCost: 3

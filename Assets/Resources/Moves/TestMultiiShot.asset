@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: TestMultiiShot
   m_EditorClassIdentifier: 
   moveName: Pea shotgun
-  moveDescription: Deals melee damage
+  moveDescription: Deals damage to a whole team
   moveDamage: 1
   moveAccuracy: 100
   moveApCost: 3
