@@ -18,9 +18,23 @@ Nel combattimento bisogna usare le mosse per infliggere danni agli avversari per
 Le tecnologie usate sono:
 - Scriptable Objects
 - Ereditarietà e polimorfismo
+- liste
 - Algoritmi di ordinamento (per ordinare chi è più veloce nei turni)
 - UI
 - Animazioni con Dotween
+
+## Diagramma UML classi principali
+<img width="1411" height="1965" alt="UIGAMEPROJECT" src="https://github.com/user-attachments/assets/b88af5c8-3772-41b1-8f73-4190e12b9c75" />
+
+## Prototipo interfaccia
+<img width="894" height="497" alt="Screenshot_6" src="https://github.com/user-attachments/assets/8c481f74-0448-4581-800b-a6d58b4df4e2" />
+
+## Interfaccie finali
+<img width="870" height="481" alt="Screenshot_3" src="https://github.com/user-attachments/assets/06ab2897-3978-4a0d-9102-802e9865f370" />
+<img width="902" height="508" alt="Screenshot_4" src="https://github.com/user-attachments/assets/e71864ba-6334-444d-95a5-9f68206f31d9" />
+<img width="896" height="497" alt="Screenshot_5" src="https://github.com/user-attachments/assets/cda631e1-2898-4b18-ab7e-9701307d032c" />
+
+
 
 
 
